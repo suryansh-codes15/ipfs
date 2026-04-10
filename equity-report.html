@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equity Outlook — IPFS Institutional Publication</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Serif+Display:ital@0;1&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F0F6E6;
+            --green-deep: #2F5A3E;
+            --green-mid: #4C825B;
+            --green-soft: #A0C969;
+            --gold: #C9A84C;
+            --text: #1C3626;
+            --text-dim: #2E513A;
+            --border: rgba(76, 130, 91, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Sora', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .report-header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+            position: relative;
+            background: transparent;
+        }
+
+        .header-visual {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+            object-fit: cover;
+        }
+
+        .eyebrow {
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 24px;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(48px, 8vw, 96px);
+            line-height: 1.1;
+            max-width: 900px;
+            z-index: 1;
+        }
+
+        h1 em {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .header-meta {
+            margin-top: 40px;
+            font-size: 18px;
+            color: var(--text-dim);
+            max-width: 700px;
+            z-index: 1;
+        }
+
+        .section {
+            padding: 120px 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 42px;
+            margin-bottom: 32px;
+            color: var(--green-deep);
+        }
+
+        .content-block {
+            margin-bottom: 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .text-content p {
+            font-size: 18px;
+            margin-bottom: 24px;
+            color: var(--text-dim);
+        }
+
+        .highlight-box {
+            background: rgba(201, 168, 76, 0.05);
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 24px;
+        }
+
+        .stat-value {
+            font-family: 'DM Serif Display', serif;
+            font-size: 56px;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+        }
+
+        .back-nav {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            z-index: 100;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: var(--gold);
+            color: var(--green-deep);
+        }
+
+        @media (max-width: 768px) {
+            .content-block {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            h1 {
+                font-size: 42px;
+            }
+        }
+
+        @media print {
+            * {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+
+            @page {
+                size: A4;
+                margin: 0;
+            }
+
+            .back-nav,
+            .scroll-indicator,
+            .btn-pdf-main {
+                display: none !important;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                background: #F0F6E6 !important;
+                font-size: 12px;
+            }
+
+            .report-header {
+                height: auto;
+                padding: 40px 40px 10px;
+                background: transparent !important;
+                position: relative;
+                z-index: 10;
+            }
+
+            .section {
+                padding: 10px 40px;
+                position: relative;
+                z-index: 10;
+            }
+
+            footer {
+                position: relative;
+                z-index: 10;
+            }
+
+            .global-decor {
+                position: absolute !important;
+                z-index: 0 !important;
+                height: 100vh !important;
+            }
+
+            h1 {
+                font-size: 36px !important;
+                margin-bottom: 10px;
+            }
+
+            .eyebrow {
+                font-size: 10px;
+                margin-bottom: 10px;
+            }
+
+            .header-meta {
+                font-size: 14px;
+                margin-top: 10px;
+            }
+
+            .section-title {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+
+            .content-block {
+                margin-bottom: 20px;
+                gap: 20px;
+                align-items: start;
+            }
+
+            .text-content p {
+                font-size: 13px;
+                margin-bottom: 15px;
+            }
+
+            .highlight-box {
+                padding: 15px;
+                margin-top: 15px;
+                border-radius: 12px;
+            }
+
+            .stat-value {
+                font-size: 28px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            footer {
+                padding: 20px;
+                margin-top: 10px;
+                border-top: 1px solid rgba(76, 130, 91, 0.1);
+            }
+
+            footer img {
+                height: 25px !important;
+                margin-bottom: 10px !important;
+            }
+
+            h1,
+            h2,
+            .eyebrow,
+            .stat-value {
+                color: var(--green-deep) !important;
+            }
+
+            p,
+            .stat-label,
+            .header-meta {
+                color: var(--text-dim) !important;
+            }
+
+            section>div:last-child {
+                margin-top: 15px !important;
+                padding: 15px !important;
+                border-radius: 12px !important;
+            }
+
+            section>div:last-child h2 {
+                font-size: 20px !important;
+            }
+
+            section>div:last-child p {
+                font-size: 13px !important;
+                margin-bottom: 0 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="global-decor"
+        style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: -2; background: var(--bg); overflow: hidden;">
+        <svg class="decor-corner decor-tl" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"
+            style="position: absolute; width: 450px; height: 450px; top: -10px; left: -10px;">
+            <path d="M0,0 L0,220 Q 180,220 280,0 Z" fill="rgba(160, 201, 105, 0.25)" />
+            <path d="M0,0 L0,320 Q 240,320 360,0 Z" fill="rgba(160, 201, 105, 0.15)" />
+            <path d="M0,0 L0,400 Q 300,400 450,0 Z" fill="rgba(160, 201, 105, 0.08)" />
+            <g transform="translate(150, 40) rotate(45)">
+                <rect width="24" height="24" fill="#A0C969" />
+            </g>
+            <g transform="translate(80, 100) rotate(45)">
+                <rect width="36" height="36" fill="#C4E091" />
+            </g>
+            <g transform="translate(220, 120) rotate(45)">
+                <rect width="18" height="18" fill="#E2EFCA" />
+            </g>
+        </svg>
+        <svg class="decor-corner decor-br" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"
+            style="position: absolute; width: 450px; height: 450px; bottom: -10px; right: -10px;">
+            <g transform="translate(400, 400) rotate(180)">
+                <path d="M0,0 L0,220 Q 180,220 280,0 Z" fill="rgba(160, 201, 105, 0.25)" />
+                <path d="M0,0 L0,320 Q 240,320 360,0 Z" fill="rgba(160, 201, 105, 0.15)" />
+                <path d="M0,0 L0,400 Q 300,400 450,0 Z" fill="rgba(160, 201, 105, 0.08)" />
+                <g transform="translate(150, 40) rotate(45)">
+                    <rect width="24" height="24" fill="#A0C969" />
+                </g>
+                <g transform="translate(80, 100) rotate(45)">
+                    <rect width="36" height="36" fill="#C4E091" />
+                </g>
+                <g transform="translate(220, 120) rotate(45)">
+                    <rect width="18" height="18" fill="#E2EFCA" />
+                </g>
+            </g>
+        </svg>
+    </div>
+
+    <nav class="back-nav">
+        <a href="blogs.html" class="btn-back" style="color: var(--green-deep); border-color: rgba(0,0,0,0.1);">← Back to
+            Insights</a>
+    </nav>
+
+    <header class="report-header">
+        <img src="assets/equity_outlook_featured.png" class="header-visual" alt="Equity Outlook Visual">
+        <div class="eyebrow">Institutional Outlook</div>
+        <h1>The Architecture of <em>Equity</em></h1>
+        <p class="header-meta">Strategic Frameworks and Capital Allocation for the Next Generation of Wealth Creation.
+        </p>
+    </header>
+
+    <section class="section">
+        <div class="content-block">
+            <div class="text-content">
+                <h2 class="section-title">Global <em>Micro-Dynamics</em></h2>
+                <p>We analyze markets through a structural lens. While news headlines focus on temporary volatility, we
+                    track the underlying corporate earnings and fundamental elasticity that drive long-term alpha.</p>
+                <div class="highlight-box">
+                    <span class="stat-value">83.0</span>
+                    <span class="stat-label">USD/INR Resilience Threshold</span>
+                </div>
+            </div>
+            <div
+                style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 40px; border-radius: 24px;">
+                <h4 style="color: var(--gold); margin-bottom: 20px; font-family: 'DM Serif Display', serif;">The Macro
+                    Reality</h4>
+                <ul
+                    style="list-style: none; display: flex; flex-direction: column; gap: 15px; color: var(--text-dim); font-size: 15px;">
+                    <li>• Commodity Supercycle Dynamics</li>
+                    <li>• Global Inflation Normalization</li>
+                    <li>• Structural Domestic Reform Impact</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-block" style="direction: rtl;">
+            <div class="text-content" style="direction: ltr;">
+                <h2 class="section-title">Strategic <em>Returns</em></h2>
+                <p>The fastest crashes in history have yielded the most aggressive recoveries. Systematic capital
+                    deployment during these windows is the key to multi-generational wealth.</p>
+                <div class="highlight-box">
+                    <span class="stat-value">30.9%</span>
+                    <span class="stat-label">Nippon India Growth (2020-2024)</span>
+                </div>
+            </div>
+            <div
+                style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 40px; border-radius: 24px;">
+                <h4 style="color: var(--gold); margin-bottom: 20px; font-family: 'DM Serif Display', serif;">Performance
+                    Metrics</h4>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div
+                        style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                        <span>HDFC Mid Cap</span>
+                        <span style="color: var(--gold);">30.3%</span>
+                    </div>
+                    <div
+                        style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                        <span>Franklin Small Cap</span>
+                        <span style="color: var(--gold);">30.8%</span>
+                    </div>
+                    <div
+                        style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 8px;">
+                        <span>Nifty Benchmark</span>
+                        <span style="color: var(--gold);">17.3%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            style="margin-top: 100px; text-align: center; background: rgba(26, 143, 115, 0.05); padding: 60px; border-radius: 40px; border: 1px solid var(--border);">
+            <h2 class="section-title" style="font-size: 32px;">The Conclusion</h2>
+            <p style="font-size: 20px; color: var(--text-dim); max-width: 700px; margin: 0 auto 40px;">Fundamental
+                corporate earnings always outlive the news cycle. Staying invested is the only proven antidote to
+                volatility and the only path to the compounding alpha.</p>
+            <a href="assets/Equity-Outlook-2020-2021-IPFS.pdf" target="_blank"
+                style="background: var(--gold); color: var(--green-deep); padding: 18px 40px; border-radius: 50px; text-decoration: none; font-weight: 700;">Full
+                Analytical Outlook (PDF)</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; text-align: left; max-width: 1200px; margin: 0 auto;">
+            <div>
+                <img src="assets/logo.png" alt="IPFS Logo" style="height: 40px; margin-bottom: 24px;">
+                <p style="font-size: 13px; color: var(--text-dim); line-height: 1.6;">Invest & Prosper Financial
+                    Services (IPFS) is an AMFI Registered Mutual Fund Distributor (ARN-24216). Investments in Mutual
+                    Funds are subject to market risks.</p>
+            </div>
+            <div class="footer-col" style="text-align: left;">
+                <h4 style="font-family: 'DM Serif Display', serif; color: var(--green-deep); margin-bottom: 20px;">Legal
+                </h4>
+                <a href="disclaimer.html"
+                    style="display: block; color: var(--text-dim); text-decoration: none; margin-bottom: 10px; font-size: 14px;">Disclaimer</a>
+                <a href="privacy-policy.html"
+                    style="display: block; color: var(--text-dim); text-decoration: none; margin-bottom: 10px; font-size: 14px;">Privacy
+                    Policy</a>
+                <a href="disclosure.html"
+                    style="display: block; color: var(--text-dim); text-decoration: none; margin-bottom: 10px; font-size: 14px;">Disclosure</a>
+            </div>
+        </div>
+        <div
+            style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 24px; font-size: 12px; color: var(--text-dim); text-align: center;">
+            © 2006–2025 www.ipfs-mfd.co.in · All Rights Reserved
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.from("h1", { opacity: 0, y: 50, duration: 1.5, ease: "power4.out" });
+        gsap.from(".eyebrow", { opacity: 0, scale: 0.9, duration: 1, delay: 0.3 });
+
+        gsap.utils.toArray(".content-block, .highlight-box").forEach(el => {
+            gsap.from(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top 90%",
+                },
+                opacity: 0,
+                y: 40,
+                duration: 1.2,
+                ease: "power2.out"
+            });
+        });
+    </script>
+</body>
+
+</html>

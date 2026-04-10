@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annual Market Outlook 2024 — IPFS Institutional Publication</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Serif+Display:ital@0;1&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F0F6E6;
+            --green-deep: #2F5A3E;
+            --green-mid: #4C825B;
+            --green-soft: #A0C969;
+            --gold: #C9A84C;
+            --text: #1C3626;
+            --text-dim: #2E513A;
+            --border: rgba(76, 130, 91, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Sora', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .report-header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .eyebrow {
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(40px, 6vw, 84px);
+            line-height: 1.1;
+            max-width: 1000px;
+        }
+
+        h1 em {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .header-meta {
+            margin-top: 40px;
+            font-size: 18px;
+            color: var(--text-dim);
+            max-width: 700px;
+        }
+
+        .section {
+            padding: 120px 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 42px;
+            margin-bottom: 32px;
+            color: var(--green-deep);
+        }
+
+        .content-block {
+            margin-bottom: 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .text-content p {
+            font-size: 18px;
+            margin-bottom: 24px;
+            color: var(--text-dim);
+        }
+
+        .highlight-box {
+            background: rgba(201, 168, 76, 0.05);
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 24px;
+        }
+
+        .stat-value {
+            font-family: 'DM Serif Display', serif;
+            font-size: 64px;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: rgba(47, 90, 62, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-nav {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            z-index: 100;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: var(--green-deep);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: var(--gold);
+            color: #fff;
+        }
+
+        footer {
+            padding: 80px 24px;
+            background: rgba(0, 0, 0, 0.02);
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .content-block {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            h1 {
+                font-size: 42px;
+            }
+
+            .report-header {
+                height: auto;
+                padding: 120px 24px 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="back-nav"><a href="blogs.html" class="btn-back">← Back to Insights</a></nav>
+    <header class="report-header">
+        <div class="eyebrow">Annual Outlook</div>
+        <h1>Annual Market <em>Outlook 2024</em></h1>
+        <p class="header-meta">Analyzing the inflection points of 2024—structural bull runs, interest rate trajectories,
+            and capital repositioning strategies.</p>
+    </header>
+    <section class="section">
+        <div class="content-block">
+            <div class="text-content">
+                <h2 class="section-title">The Year of <em>Inflection</em></h2>
+                <p>2024 was marked by significant pivot points in global monetary policy and the resurgence of
+                    domestic-led growth narratives in the Indian subcontinent.</p>
+                <div class="highlight-box">
+                    <span class="stat-value">2024</span>
+                    <span class="stat-label">Market Milestone Year</span>
+                </div>
+            </div>
+            <div class="chart-placeholder">
+                <svg viewBox="0 0 200 100" width="80%">
+                    <polyline points="10,90 50,70 90,75 130,40 170,30 190,10" fill="none" stroke="var(--gold)"
+                        stroke-width="4" />
+                </svg>
+            </div>
+        </div>
+        <div style="margin-top: 100px; text-align: center;">
+            <h2 class="section-title">Institutional Archive</h2>
+            <p style="font-size: 20px; color: var(--text-dim); max-width: 800px; margin: 0 auto 40px;">Access our
+                historical analysis for the 2024 cycle, detailing the sector-specific tailwinds and risk-mitigation
+                frameworks deployed.</p>
+            <a href="assets/Annual Market Outlook 2024.pdf" target="_blank"
+                style="display:inline-block; background: var(--green-deep); color: #fff; padding: 20px 48px; border-radius: 50px; text-decoration: none; font-weight: 700; transition: 0.3s;">Download
+                2024 Publication</a>
+        </div>
+    </section>
+    <footer>
+        <img src="assets/logo.png" alt="IPFS Logo" style="height:40px; margin-bottom: 24px; opacity: 0.6;">
+        <p style="font-size: 13px; color: var(--text-dim);">© 2006–2025 Invest & Prosper Financial Services · ARN-24216
+        </p>
+    </footer>
+</body>
+
+</html>

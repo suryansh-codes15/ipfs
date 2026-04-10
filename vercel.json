@@ -1,0 +1,15 @@
+{
+    "cleanUrls": true,
+    "redirects": [
+        {
+            "source": "/why us.html",
+            "destination": "/why-us.html",
+            "permanent": true
+        },
+        {
+            "source": "/why%20us.html",
+            "destination": "/why-us.html",
+            "permanent": true
+        }
+    ]
+}

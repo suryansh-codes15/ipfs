@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signal Through the Noise — IPFS Institutional Publication</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Serif+Display:ital@0;1&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #F0F6E6;
+            --green-deep: #2F5A3E;
+            --green-mid: #4C825B;
+            --green-soft: #A0C969;
+            --gold: #C9A84C;
+            --text: #1C3626;
+            --text-dim: #2E513A;
+            --border: rgba(76, 130, 91, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Sora', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .report-header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px;
+            position: relative;
+            background: transparent;
+        }
+
+        .header-decor {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            opacity: 0.3;
+        }
+
+        .eyebrow {
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 24px;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: clamp(48px, 8vw, 96px);
+            line-height: 1.1;
+            max-width: 900px;
+            z-index: 1;
+        }
+
+        h1 em {
+            color: var(--gold);
+            font-style: italic;
+        }
+
+        .header-meta {
+            margin-top: 40px;
+            font-size: 18px;
+            color: var(--text-dim);
+            max-width: 600px;
+            z-index: 1;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-10px);
+            }
+
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .section {
+            padding: 120px 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 42px;
+            margin-bottom: 32px;
+            color: var(--green-deep);
+        }
+
+        .content-block {
+            margin-bottom: 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .text-content p {
+            font-size: 18px;
+            margin-bottom: 24px;
+            color: var(--text-dim);
+        }
+
+        .highlight-box {
+            background: rgba(201, 168, 76, 0.05);
+            border: 1px solid var(--border);
+            padding: 40px;
+            border-radius: 24px;
+            margin-top: 40px;
+        }
+
+        .stat-value {
+            font-family: 'DM Serif Display', serif;
+            font-size: 64px;
+            color: var(--gold);
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+        }
+
+        .chart-placeholder {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px dashed var(--border);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .back-nav {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            z-index: 100;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 12px 24px;
+            border-radius: 50px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: var(--gold);
+            color: var(--green-deep);
+        }
+
+        @media (max-width: 768px) {
+            .content-block {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            h1 {
+                font-size: 42px;
+            }
+        }
+
+        @media print {
+            * {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+
+            @page {
+                size: A4;
+                margin: 0;
+            }
+
+            .back-nav,
+            .scroll-indicator,
+            .btn-pdf-main {
+                display: none !important;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                background: #F0F6E6 !important;
+                font-size: 12px;
+            }
+
+            .report-header {
+                height: auto;
+                padding: 40px 40px 10px;
+                background: transparent !important;
+                position: relative;
+                z-index: 10;
+            }
+
+            .section {
+                padding: 10px 40px;
+                position: relative;
+                z-index: 10;
+            }
+
+            footer {
+                position: relative;
+                z-index: 10;
+            }
+
+            .global-decor {
+                position: absolute !important;
+                z-index: 0 !important;
+                height: 100vh !important;
+            }
+
+            h1 {
+                font-size: 36px !important;
+                margin-bottom: 10px;
+            }
+
+            .eyebrow {
+                font-size: 10px;
+                margin-bottom: 10px;
+            }
+
+            .header-meta {
+                font-size: 14px;
+                margin-top: 10px;
+            }
+
+            .section-title {
+                font-size: 20px;
+                margin-bottom: 15px;
+            }
+
+            .content-block {
+                margin-bottom: 20px;
+                gap: 20px;
+                align-items: start;
+            }
+
+            .text-content p {
+                font-size: 13px;
+                margin-bottom: 15px;
+            }
+
+            .highlight-box {
+                padding: 15px;
+                margin-top: 15px;
+                border-radius: 12px;
+            }
+
+            .stat-value {
+                font-size: 28px;
+            }
+
+            .stat-label {
+                font-size: 10px;
+            }
+
+            .chart-placeholder {
+                aspect-ratio: 21/9;
+                padding: 10px;
+                border-radius: 12px;
+                background: rgba(0, 0, 0, 0.02);
+                border: 1px solid rgba(76, 130, 91, 0.2);
+            }
+
+            .chart-placeholder svg {
+                width: 100%;
+                height: auto;
+            }
+
+            .chart-placeholder path {
+                stroke: var(--green-deep);
+            }
+
+            .chart-placeholder circle {
+                fill: var(--green-deep);
+                stroke: var(--green-deep);
+            }
+
+            .chart-placeholder text {
+                fill: var(--text-dim) !important;
+                font-size: 12px;
+            }
+
+            footer {
+                padding: 20px;
+                margin-top: 20px;
+                border-top: 1px solid rgba(76, 130, 91, 0.1);
+            }
+
+            footer img {
+                height: 25px !important;
+                margin-bottom: 10px !important;
+            }
+
+            h1,
+            h2,
+            .eyebrow,
+            .stat-value {
+                color: var(--green-deep) !important;
+            }
+
+            p,
+            .stat-label,
+            .header-meta {
+                color: var(--text-dim) !important;
+            }
+
+            section>div:last-child {
+                margin-top: 20px !important;
+                padding: 20px !important;
+                border-radius: 16px !important;
+            }
+
+            section>div:last-child h2 {
+                font-size: 20px !important;
+            }
+
+            section>div:last-child p {
+                font-size: 14px !important;
+                margin-bottom: 0 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="global-decor"
+        style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: -2; background: var(--bg); overflow: hidden;">
+        <svg class="decor-corner decor-tl" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"
+            style="position: absolute; width: 450px; height: 450px; top: -10px; left: -10px;">
+            <path d="M0,0 L0,220 Q 180,220 280,0 Z" fill="rgba(160, 201, 105, 0.25)" />
+            <path d="M0,0 L0,320 Q 240,320 360,0 Z" fill="rgba(160, 201, 105, 0.15)" />
+            <path d="M0,0 L0,400 Q 300,400 450,0 Z" fill="rgba(160, 201, 105, 0.08)" />
+            <g transform="translate(150, 40) rotate(45)">
+                <rect width="24" height="24" fill="#A0C969" />
+            </g>
+            <g transform="translate(80, 100) rotate(45)">
+                <rect width="36" height="36" fill="#C4E091" />
+            </g>
+            <g transform="translate(220, 120) rotate(45)">
+                <rect width="18" height="18" fill="#E2EFCA" />
+            </g>
+        </svg>
+        <svg class="decor-corner decor-br" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg"
+            style="position: absolute; width: 450px; height: 450px; bottom: -10px; right: -10px;">
+            <g transform="translate(400, 400) rotate(180)">
+                <path d="M0,0 L0,220 Q 180,220 280,0 Z" fill="rgba(160, 201, 105, 0.25)" />
+                <path d="M0,0 L0,320 Q 240,320 360,0 Z" fill="rgba(160, 201, 105, 0.15)" />
+                <path d="M0,0 L0,400 Q 300,400 450,0 Z" fill="rgba(160, 201, 105, 0.08)" />
+                <g transform="translate(150, 40) rotate(45)">
+                    <rect width="24" height="24" fill="#A0C969" />
+                </g>
+                <g transform="translate(80, 100) rotate(45)">
+                    <rect width="36" height="36" fill="#C4E091" />
+                </g>
+                <g transform="translate(220, 120) rotate(45)">
+                    <rect width="18" height="18" fill="#E2EFCA" />
+                </g>
+            </g>
+        </svg>
+    </div>
+
+    <nav class="back-nav">
+        <a href="blogs.html" class="btn-back" style="color: var(--green-deep); border-color: rgba(0,0,0,0.1);">← Back to
+            Insights</a>
+    </nav>
+
+    <header class="report-header">
+        <div class="header-decor">
+            <svg width="100%" height="100%" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+                <path d="M0,800 C300,750 600,850 1000,700" stroke="var(--gold)" stroke-width="2" fill="none"
+                    opacity="0.1" />
+                <path d="M0,600 C400,650 700,550 1000,650" stroke="var(--gold)" stroke-width="2" fill="none"
+                    opacity="0.05" />
+            </svg>
+        </div>
+        <div class="eyebrow">Institutional Whitepaper</div>
+        <h1>The Signal Through <em>the Noise</em></h1>
+        <p class="header-meta">Why Geopolitical Crises, Oil Spikes, and Market Panics are the Greatest Decoys in Wealth
+            Creation.</p>
+        <div class="scroll-indicator">↓</div>
+    </header>
+
+    <section class="section">
+        <div class="content-block">
+            <div class="text-content">
+                <h2 class="section-title">The Cycle of <em>Panic</em></h2>
+                <p>History repeatedly demonstrates that while macroeconomic shocks are inevitable, they are rarely fatal
+                    to structured capital. Investors who react to the noise of the moment often sacrifice the trajectory
+                    of a decade.</p>
+                <div class="highlight-box">
+                    <span class="stat-value">60%</span>
+                    <span class="stat-label">Sensex/Nifty Crash in 2008</span>
+                </div>
+            </div>
+            <div class="chart-placeholder">
+                <!-- SVG Chart mirroring the PDF -->
+                <svg viewBox="0 0 300 150" width="80%">
+                    <path d="M10,140 L50,135 L90,145 L130,120 L170,110 L210,60 L280,20" fill="none" stroke="var(--gold)"
+                        stroke-width="4" stroke-linecap="round" />
+                    <circle cx="10" cy="140" r="4" fill="var(--gold)" />
+                    <text x="0" y="148" fill="var(--text-dim)" font-size="8">2008</text>
+                    <circle cx="280" cy="20" r="4" fill="var(--gold)" />
+                    <text x="260" y="15" fill="var(--gold)" font-size="10" font-weight="700">Growth</text>
+                </svg>
+            </div>
+        </div>
+
+        <div class="content-block" style="direction: rtl;">
+            <div class="text-content" style="direction: ltr;">
+                <h2 class="section-title">Survival &amp; <em>Resilience</em></h2>
+                <p>From the Global Financial Crisis (2008) to the Taper Tantrum (2013), and the COVID-19 pandemic
+                    (2020), every period of "unprecedented" turmoil was met with a stronger, more aggressive recovery.
+                </p>
+                <div class="highlight-box">
+                    <span class="stat-value">30.8%</span>
+                    <span class="stat-label">Avg. Annualized Growth Post-2020</span>
+                </div>
+            </div>
+            <div class="chart-placeholder">
+                <svg viewBox="0 0 200 200" width="60%">
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="20" />
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="var(--gold)" stroke-width="20"
+                        stroke-dasharray="350 500" stroke-linecap="round" transform="rotate(-90 100 100)" />
+                </svg>
+            </div>
+        </div>
+
+        <div style="margin-top: 100px; text-align: center;">
+            <h2 class="section-title" style="font-size: 32px;">The Institutional Takeaway</h2>
+            <p
+                style="font-size: 24px; color: var(--gold-light); font-family: 'DM Serif Display', serif; max-width: 800px; margin: 0 auto;">
+                "Geopolitical anxiety is the premium paid for long-term equity returns. The mathematically sound
+                strategy is to ignore the macro noise and trust the architecture of compounding."</p>
+
+            <div style="margin-top: 60px;">
+                <a href="assets/Signal_Over_Noise .pdf" target="_blank" class="btn-pdf-main"
+                    style="background: var(--gold); color: var(--green-deep); padding: 18px 40px; border-radius: 50px; text-decoration: none; font-weight: 700;">Download
+                    Original PDF</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; text-align: left; max-width: 1200px; margin: 0 auto;">
+            <div>
+                <img src="assets/logo.png" alt="IPFS Logo" style="height:40px; opacity: 0.5; margin-bottom: 24px;">
+                <p style="font-size: 13px; color: var(--text-dim); line-height: 1.6;">Invest & Prosper Financial
+                    Services (IPFS) is an AMFI Registered Mutual Fund Distributor (ARN-24216). Investments in Mutual
+                    Funds are subject to market risks.</p>
+            </div>
+            <div class="footer-col">
+                <h4 style="font-family: 'DM Serif Display', serif; color: var(--green-deep); margin-bottom: 20px;">Legal
+                </h4>
+                <a href="disclaimer.html"
+                    style="display: block; color: var(--text-dim); text-decoration: none; margin-bottom: 10px; font-size: 14px;">Disclaimer</a>
+                <a href="privacy-policy.html"
+                    style="display: block; color: var(--text-dim); text-decoration: none; margin-bottom: 10px; font-size: 14px;">Privacy
+                    Policy</a>
+                <a href="disclosure.html"
+                    style="display: block; color: var(--text-dim); text-decoration: none; margin-bottom: 10px; font-size: 14px;">Disclosure</a>
+            </div>
+        </div>
+        <div
+            style="margin-top: 40px; border-top: 1px solid var(--border); padding-top: 24px; font-size: 12px; color: var(--text-dim);">
+            © 2006–2025 www.ipfs-mfd.co.in · All Rights Reserved
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.from("h1", { opacity: 0, y: 50, duration: 1.5, ease: "power4.out" });
+        gsap.from(".eyebrow", { opacity: 0, y: 20, duration: 1.2, delay: 0.5 });
+
+        gsap.utils.toArray(".reveal, .content-block, .highlight-box").forEach(el => {
+            gsap.from(el, {
+                scrollTrigger: {
+                    trigger: el,
+                    start: "top 85%",
+                    toggleActions: "play none none none"
+                },
+                opacity: 0,
+                y: 30,
+                duration: 1,
+                ease: "power2.out"
+            });
+        });
+    </script>
+</body>
+
+</html>

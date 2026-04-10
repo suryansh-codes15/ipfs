@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogs — Signal Over Noise | IPFS Elite Wealth Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        .blogs-hero {
+            padding: 160px 6% 60px;
+            text-align: center;
+        }
+
+        .blog-section {
+            padding: 60px 6% 120px;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 500px;
+        }
+
+        .blog-loading {
+            grid-column: 1 / -1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 0;
+            gap: 20px;
+            color: var(--green-mid);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(160, 201, 105, 0.1);
+            border-top-color: var(--green-mid);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* COMPACT CARD STYLING */
+        .card-img-wrap {
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            aspect-ratio: 16/9;
+        }
+
+        .card-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .blog-card:hover .card-img-wrap img {
+            transform: scale(1.05);
+        }
+
+        .blog-card.dark-card {
+            background: linear-gradient(135deg, rgba(14, 54, 43, 0.92), rgba(36, 70, 49, 0.98));
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .blog-card.light-card {
+            background: rgba(255, 255, 255, 0.92);
+            border-color: rgba(160, 201, 105, 0.25);
+        }
+
+        /* Gradient cover thumbnails */
+        .card-img-wrap.grad-blue {
+            background: linear-gradient(135deg, #1a4a6e, #2d7ab5);
+        }
+
+        .card-img-wrap.grad-blue {
+            background: radial-gradient(at 0% 0%, #1a3a5a 0%, transparent 50%),
+                radial-gradient(at 100% 0%, #2d5a9a 0%, transparent 50%),
+                radial-gradient(at 100% 100%, #1a3a5a 0%, transparent 50%),
+                radial-gradient(at 0% 100%, #2d5a9a 0%, transparent 50%),
+                #0e1c2e;
+        }
+
+        .card-img-wrap.grad-gold {
+            background: radial-gradient(at 0% 0%, #7a5c1a 0%, transparent 50%),
+                radial-gradient(at 100% 0%, #c9963a 0%, transparent 50%),
+                radial-gradient(at 100% 100%, #7a5c1a 0%, transparent 50%),
+                radial-gradient(at 0% 100%, #c9963a 0%, transparent 50%),
+                #3d2e0d;
+        }
+
+        .card-img-wrap.grad-green {
+            background: radial-gradient(at 0% 0%, #1a4a2e 0%, transparent 50%),
+                radial-gradient(at 100% 0%, #2d8a55 0%, transparent 50%),
+                radial-gradient(at 100% 100%, #1a4a2e 0%, transparent 50%),
+                radial-gradient(at 0% 100%, #2d8a55 0%, transparent 50%),
+                #0a1f14;
+        }
+
+        .card-img-wrap.grad-orange {
+            background: radial-gradient(at 0% 0%, #7a3a1a 0%, transparent 50%),
+                radial-gradient(at 100% 0%, #c96b3a 0%, transparent 50%),
+                radial-gradient(at 100% 100%, #7a3a1a 0%, transparent 50%),
+                radial-gradient(at 0% 100%, #c96b3a 0%, transparent 50%),
+                #3d1d0d;
+        }
+
+        .card-img-wrap.grad-teal {
+            background: radial-gradient(at 0% 0%, #1a5a5a 0%, transparent 50%),
+                radial-gradient(at 100% 0%, #2d9a9a 0%, transparent 50%),
+                radial-gradient(at 100% 100%, #1a5a5a 0%, transparent 50%),
+                radial-gradient(at 0% 100%, #2d9a9a 0%, transparent 50%),
+                #0d2e2e;
+        }
+
+        .card-img-wrap.grad-purple {
+            background: radial-gradient(at 0% 0%, #3a1a5a 0%, transparent 50%),
+                radial-gradient(at 100% 0%, #6b3a9a 0%, transparent 50%),
+                radial-gradient(at 100% 100%, #3a1a5a 0%, transparent 50%),
+                radial-gradient(at 0% 100%, #6b3a9a 0%, transparent 50%),
+                #1d0d2e;
+        }
+
+        .cov-icon {
+            opacity: 0.9;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes meshPulse {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .card-img-wrap {
+            position: relative;
+            overflow: hidden;
+            background-size: 200% 200% !important;
+            animation: meshPulse 8s ease infinite;
+        }
+
+        .card-img-wrap::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -150%;
+            width: 50%;
+            height: 200%;
+            background: linear-gradient(to right,
+                    rgba(255, 255, 255, 0) 0%,
+                    rgba(255, 255, 255, 0.1) 50%,
+                    rgba(255, 255, 255, 0) 100%);
+            transform: rotate(30deg);
+            animation: shimmer 4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                left: -150%;
+            }
+
+            100% {
+                left: 150%;
+            }
+        }
+
+        .cov-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: #fff;
+            animation: iconFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-5px) scale(1.05);
+            }
+        }
+
+        /* Light card action button */
+        .btn-pdf-main-sm-light {
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.3s;
+            background: var(--green-deep);
+            color: #fff;
+            text-align: center;
+            flex: 1;
+        }
+
+        .btn-pdf-main-sm-light:hover {
+            transform: translateY(-2px);
+            background: var(--green-mid);
+        }
+
+        .btn-pdf-sec-sm-light {
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.3s;
+            background: transparent;
+            color: var(--green-deep);
+            border: 1px solid rgba(47, 90, 62, 0.2);
+            text-align: center;
+            flex: 1;
+        }
+
+        .btn-pdf-sec-sm-light:hover {
+            background: rgba(47, 90, 62, 0.05);
+            border-color: var(--green-mid);
+        }
+
+        /* Light coming-soon */
+        .coming-soon-light {
+            background: rgba(14, 54, 43, 0.08);
+            border-color: rgba(14, 54, 43, 0.15);
+            color: var(--green-deep);
+        }
+
+        .dot-light {
+            background: var(--green-mid) !important;
+        }
+
+        .dot-light::after {
+            background: var(--green-mid) !important;
+        }
+
+        .card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .btn-pdf-main-sm,
+        .btn-pdf-sec-sm {
+            padding: 10px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 700;
+            transition: all 0.3s;
+            text-align: center;
+            flex: 1;
+            white-space: nowrap;
+        }
+
+        .btn-pdf-main-sm {
+            background: var(--gold);
+            color: var(--green-deep);
+        }
+
+        .btn-pdf-main-sm:hover {
+            transform: translateY(-2px);
+            background: var(--gold-light);
+        }
+
+        .btn-pdf-sec-sm {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-pdf-sec-sm:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .blog-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 28px;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .blog-card.dark-card {
+            background: linear-gradient(135deg, rgba(14, 54, 43, 0.9), rgba(36, 70, 49, 0.98));
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+            border-color: var(--gold);
+        }
+
+        .blog-card.dark-card:hover {
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 20px rgba(201, 168, 76, 0.1);
+        }
+
+        .blog-meta {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--green-mid);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .blog-card.dark-card .blog-meta {
+            color: var(--gold);
+        }
+
+        .blog-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: var(--green-deep);
+            line-height: 1.2;
+        }
+
+        .blog-card.dark-card .blog-title {
+            color: #fff;
+        }
+
+        .blog-desc {
+            font-size: 13px;
+            color: var(--text-3);
+            line-height: 1.6;
+        }
+
+        .blog-card.dark-card .blog-desc {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 1100px) {
+            .blog-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .coming-soon-badge {
+            margin-top: auto;
+            align-self: flex-start;
+            padding: 6px 12px;
+            background: rgba(160, 201, 105, 0.1);
+            border: 1px solid rgba(160, 201, 105, 0.2);
+            border-radius: 50px;
+            color: var(--green-deep);
+            font-weight: 700;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .coming-soon-badge .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .coming-soon-badge .dot::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+
+            70% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .featured-pdf {
+                padding: 40px 30px;
+                text-align: center;
+                gap: 40px;
+            }
+
+            .pdf-actions {
+                justify-content: center;
+            }
+
+            .pdf-mockup {
+                max-width: 400px;
+                margin: 0 auto;
+                transform: none;
+            }
+
+            .featured-pdf:hover .pdf-mockup {
+                transform: scale(1.05);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .pdf-content h2 {
+                font-size: 36px;
+            }
+
+            .featured-pdf {
+                padding: 40px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body class="blogs-page">
+    <!-- GLOBAL DECORATION -->
+    <div class="global-decor">
+        <svg class="decor-corner decor-tl" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 L0,220 Q 180,220 280,0 Z" fill="rgba(160, 201, 105, 0.25)" />
+            <path d="M0,0 L0,320 Q 240,320 360,0 Z" fill="rgba(160, 201, 105, 0.15)" />
+            <path d="M0,0 L0,400 Q 300,400 450,0 Z" fill="rgba(160, 201, 105, 0.08)" />
+            <g transform="translate(150, 40) rotate(45)">
+                <rect width="24" height="24" fill="#A0C969" />
+            </g>
+            <g transform="translate(80, 100) rotate(45)">
+                <rect width="36" height="36" fill="#C4E091" />
+            </g>
+            <g transform="translate(220, 120) rotate(45)">
+                <rect width="18" height="18" fill="#E2EFCA" />
+            </g>
+            <g transform="translate(120, 180) rotate(45)">
+                <rect width="20" height="20" fill="#A0C969" opacity="0.6" />
+            </g>
+            <g transform="translate(50, 250) rotate(45)">
+                <rect width="30" height="30" fill="#A0C969" />
+            </g>
+            <g transform="translate(210, 60)">
+                <rect transform="rotate(45)" width="10" height="10" fill="#C4E091" />
+            </g>
+            <g transform="translate(230, 80)">
+                <rect transform="rotate(45)" width="10" height="10" fill="#C4E091" />
+            </g>
+            <g transform="translate(250, 100)">
+                <rect transform="rotate(45)" width="10" height="10" fill="#C4E091" />
+            </g>
+            <g transform="translate(190, 80)">
+                <rect transform="rotate(45)" width="10" height="10" fill="#C4E091" />
+            </g>
+            <g transform="translate(210, 100)">
+                <rect transform="rotate(45)" width="10" height="10" fill="#C4E091" />
+            </g>
+            <g transform="translate(230, 120)">
+                <rect transform="rotate(45)" width="10" height="10" fill="#C4E091" />
+            </g>
+            <g transform="translate(100, 320) rotate(45)">
+                <rect width="25" height="25" fill="#A0C969" opacity="0.3" />
+            </g>
+            <g transform="translate(280, 180) rotate(45)">
+                <rect width="16" height="16" fill="#A0C969" opacity="0.7" />
+            </g>
+            <g transform="translate(320, 100) rotate(45)">
+                <rect width="22" height="22" fill="#C4E091" />
+            </g>
+        </svg>
+        <svg class="decor-corner decor-br" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(400, 400) rotate(180)">
+                <path d="M0,0 L0,220 Q 180,220 280,0 Z" fill="rgba(160, 201, 105, 0.25)" />
+                <path d="M0,0 L0,320 Q 240,320 360,0 Z" fill="rgba(160, 201, 105, 0.15)" />
+                <path d="M0,0 L0,400 Q 300,400 450,0 Z" fill="rgba(160, 201, 105, 0.08)" />
+                <g transform="translate(150, 40) rotate(45)">
+                    <rect width="24" height="24" fill="#A0C969" />
+                </g>
+                <g transform="translate(80, 100) rotate(45)">
+                    <rect width="36" height="36" fill="#C4E091" />
+                </g>
+                <g transform="translate(220, 120) rotate(45)">
+                    <rect width="18" height="18" fill="#E2EFCA" />
+                </g>
+                <g transform="translate(120, 180) rotate(45)">
+                    <rect width="20" height="20" fill="#A0C969" opacity="0.6" />
+                </g>
+                <g transform="translate(50, 250) rotate(45)">
+                    <rect width="30" height="30" fill="#A0C969" />
+                </g>
+                <g transform="translate(210, 60)">
+                    <rect transform="rotate(45)" width="10" height="10" fill="#C4E091" />
+                </g>
+                <g transform="translate(230, 80)">
+                    <rect transform="rotate(45)" width="10" height="10" fill="#C4E091" />
+                </g>
+                <g transform="translate(250, 100)">
+                    <rect transform="rotate(45)" width="10" height="10" fill="#C4E091" />
+                </g>
+                <g transform="translate(190, 80)">
+                    <rect transform="rotate(45)" width="10" height="10" fill="#C4E091" />
+                </g>
+                <g transform="translate(210, 100)">
+                    <rect transform="rotate(45)" width="10" height="10" fill="#C4E091" />
+                </g>
+                <g transform="translate(230, 120)">
+                    <rect transform="rotate(45)" width="10" height="10" fill="#C4E091" />
+                </g>
+                <g transform="translate(100, 320) rotate(45)">
+                    <rect width="25" height="25" fill="#A0C969" opacity="0.3" />
+                </g>
+                <g transform="translate(280, 180) rotate(45)">
+                    <rect width="16" height="16" fill="#A0C969" opacity="0.7" />
+                </g>
+                <g transform="translate(320, 100) rotate(45)">
+                    <rect width="22" height="22" fill="#C4E091" />
+                </g>
+            </g>
+        </svg>
+        <div class="central-glow"></div>
+    </div>
+
+    <!-- Floating institutional decor -->
+    <div class="institutional-bg-decor"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; overflow: hidden; opacity: 0.4;">
+        <div
+            style="position: absolute; top: -10%; left: -10%; width: 40%; height: 40%; background: radial-gradient(circle, rgba(160, 201, 105, 0.1), transparent 70%); filter: blur(60px);">
+        </div>
+        <div
+            style="position: absolute; bottom: -10%; right: -10%; width: 50%; height: 50%; background: radial-gradient(circle, rgba(47, 90, 62, 0.05), transparent 70%); filter: blur(80px);">
+        </div>
+        <svg style="position: absolute; top: 20%; right: 5%; width: 300px; height: 300px; opacity: 0.03;"
+            viewBox="0 0 100 100">
+            <path d="M0,50 Q25,0 50,50 T100,50" fill="none" stroke="var(--green-deep)" stroke-width="0.5" />
+            <path d="M0,60 Q25,10 50,60 T100,60" fill="none" stroke="var(--green-deep)" stroke-width="0.5" />
+        </svg>
+    </div>
+
+    <div class="central-glow-wrap"
+        style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80vw; height: 80vh; pointer-events: none; z-index: -2; opacity: 0.3;">
+        <svg viewBox="0 0 1000 1000" preserveAspectRatio="none" style="width: 100%; height: 100%;">
+            <defs>
+                <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="#A0C969" stop-opacity="0.2" />
+                    <stop offset="100%" stop-color="#A0C969" stop-opacity="0" />
+                </radialGradient>
+            </defs>
+            <rect width="1000" height="1000" fill="url(#glowGrad)" />
+        </svg>
+    </div>
+
+    <!-- Floating glass shapes -->
+    <div class="shape shape-1">
+        <div class="shape-inner">📈</div>
+    </div>
+    <div class="shape shape-2">
+        <div class="shape-inner">💎</div>
+    </div>
+    <div class="shape shape-3">
+        <div class="shape-inner" style="font-size:13px;font-weight:700;color:var(--green-mid)">ARN-24216</div>
+    </div>
+    <div class="shape shape-4">
+        <div class="shape-inner">🏆</div>
+    </div>
+
+    <nav id="navbar">
+        <a href="index.html" class="nav-logo"><img src="assets/logo.png" alt="IPFS Logo" class="brand-logo"></a>
+        <div class="nav-links">
+            <a href="about.html">About Us</a>
+            <a href="why-us.html">Why Us</a>
+            <a href="services.html">Services</a>
+            <a href="calculator.html">Calculator</a>
+            <a href="blogs.html" class="active">Blogs</a>
+        </div>
+
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:12px;">
+            <a href="https://play.google.com/store/apps/details?id=com.investandprosperfinancial.mobile.app"
+                target="_blank" class="play-store-badge">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                    alt="Get it on Google Play" style="height:34px;">
+            </a>
+            <a href="https://ipfs.investwell.app/app/#/login" target="_blank" class="btn-elite">Portfolio Login</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="blogs-hero">
+        <div class="section-eyebrow reveal">Knowledge Engine</div>
+        <h1 class="hero-headline reveal d1">Financial <em>Intelligence</em></h1>
+        <p class="hero-sub reveal d2" style="max-width: 700px; margin: 20px auto;">Access our curated archive of
+            strategy papers, market whitepapers, and wealth creation frameworks.</p>
+    </header>
+
+    <main class="blog-section">
+        <div class="blog-grid" id="blog-container">
+            <!-- Dynamic content will be injected here -->
+            <div class="blog-loading">
+                <div class="loading-spinner"></div>
+                <p>Curating Financial Intelligence...</p>
+            </div>
+        </div>
+
+    </main>
+
+                            <footer style="padding: 40px 0 20px;">
+    <div class="max-w" style="text-align: center;">
+      <img src="assets/logo.png" alt="IPFS Logo" style="height:45px; margin-bottom:15px;">
+      <p style="font-size:14px; line-height:1.6; color:var(--text-3); max-width:800px; margin: 0 auto 5px;">
+        Invest & Prosper Financial Services (IPFS) is helping elite Indian families build wealth since 2006.
+      </p>
+      <p style="font-size:11.5px; font-weight:600; color:var(--text-3); margin-bottom:25px; opacity:0.85;">
+        AMFI Registered Mutual Fund Distributor | ARN-24216 | Date of initial Registration: 18.09.2006 | Current validity: 17.09.2027
+      </p>
+      
+      <div class="footer-legal-integrated" style="text-align:left; font-size:11px; line-height:1.6; color:var(--text-4); max-width:1160px; margin: 0 auto;">
+        <p style="margin-bottom:8px;"><strong>Risk Factors</strong> – Investments in Mutual Funds are subject to Market Risks. Read all scheme related documents carefully before investing. Mutual Fund Schemes do not assure or guarantee any returns. Past performances of any Mutual Fund Scheme may or may not be sustained in future. There is no guarantee that the investment objective of any suggested scheme shall be achieved. All existing and prospective investors are advised to check and evaluate the Exit loads and other cost structure (TER) applicable at the time of making the investment before finalizing on any investment decision for Mutual Funds schemes.</p>
+        <p style="margin-bottom:20px;">We deal in Regular Plans only for Mutual Fund Schemes and earn a Trailing Commission on client investments. Disclosure For Commission earnings is made to clients at the time of investments. Option of Direct Plan for every Mutual Fund Scheme is available to investors offering advantage of lower expense ratio. We are not entitled to earn any commission on Direct plans. Hence we do not deal in Direct Plans.</p>
+      </div>
+
+      <div class="footer-legal-links" style="display:flex; justify-content:center; gap:28px; margin-bottom:20px; padding-top:20px; border-top:1px solid rgba(0,0,0,0.06);">
+        <a href="disclaimer.html" style="font-size:13px; color:var(--text-2); text-decoration:none; font-weight:600; transition: color 0.2s;">Disclaimer</a>
+        <a href="privacy-policy.html" style="font-size:13px; color:var(--text-2); text-decoration:none; font-weight:600; transition: color 0.2s;">Privacy Policy</a>
+        <a href="disclosure.html" style="font-size:13px; color:var(--text-2); text-decoration:none; font-weight:600; transition: color 0.2s;">Disclosure</a>
+      </div>
+      
+      <div style="padding-top:10px; font-size:10.5px; color:var(--text-4); opacity: 0.7;">
+        © 2006–2025 www.ipfs-mfd.co.in · All Rights Reserved
+      </div>
+    </div>
+  </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="module" src="./main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in');
+                    }
+                });
+            }, { threshold: 0.1 });
+            reveals.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+
+</html>

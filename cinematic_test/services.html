@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Services — Elite Financial Architecture | IPFS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <style>
+        .services-hero {
+            padding: 160px 6% 100px;
+            text-align: center;
+        }
+
+        .services-container {
+            padding: 0 6% 120px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .service-card-elite {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 50px 40px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card-elite:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--green-mid);
+        }
+
+        .service-card-elite img {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 30px;
+            margin-bottom: 10px;
+            filter: contrast(1.1);
+        }
+
+        .service-card-elite h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 28px;
+            color: var(--green-deep);
+        }
+
+        .service-card-elite p {
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-3);
+        }
+
+        .service-stats-banner {
+            background: var(--green-deep);
+            padding: 100px 6%;
+            color: #fff;
+            text-align: center;
+            margin: 80px -6.5%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        .serv-stat-item h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 84px;
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .serv-stat-item span {
+            font-size: 14px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.8;
+            font-weight: 700;
+        }
+
+        .curious-section {
+            background: var(--bg2);
+            border-radius: 50px;
+            padding: 80px;
+            margin: 100px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .curious-content h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 52px;
+            margin-bottom: 25px;
+            color: var(--green-deep);
+        }
+
+        .curious-content h2 em {
+            font-style: italic;
+            color: var(--gold);
+        }
+
+        .pathshala-tag {
+            color: var(--gold);
+            font-weight: 800;
+            margin-bottom: 15px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media(max-width: 1024px) {
+            .services-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .service-stats-banner,
+            .curious-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 600px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .curious-section {
+                padding: 40px 30px;
+            }
+        }
+    </style>
+</head>
+
+<body class="services-page">
+    <!-- GLOBAL DECORATION -->
+    <div class="global-decor">
+        <div class="central-glow"></div>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav id="navbar">
+        <a href="index.html" class="nav-logo">
+            <img src="assets/logo.png" alt="IPFS Logo" class="brand-logo">
+        </a>
+        <div class="nav-links">
+            <a href="index.html#difference">Why Us</a>
+            <a href="services.html" class="active">Services</a>
+            <a href="about.html">About Us</a>
+            <a href="blogs.html">Blogs</a>
+            <a href="calculator.html">Calculator</a>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <a href="https://play.google.com/store/apps/details?id=com.investandprosperfinancial.mobile.app"
+                target="_blank" class="play-store-badge">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                    alt="Get it on Google Play" style="height:34px;">
+            </a>
+            <a href="https://ipfs.investwell.app/app/#/login" target="_blank" class="btn-elite">Portfolio Login</a>
+        </div>
+    </nav>
+
+    <header class="services-hero">
+        <div class="section-eyebrow reveal-cinematic">Our Methodology</div>
+        <h1 class="hero-headline reveal-cinematic d1">For us, it's about<br><em>You, with You.</em></h1>
+        <p class="hero-sub reveal-cinematic d2">Personalised guidance that focuses on achieving your financial goals and
+            not on
+            selling financial products.</p>
+    </header>
+
+    <div class="services-container">
+        <div class="services-grid">
+            <!-- Service 1 -->
+            <div class="service-card-elite reveal-cinematic">
+                <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?q=80&w=3511&auto=format&fit=crop"
+                    alt="Budgeting">
+                <h3>Budgeting</h3>
+                <p>Through the combination of our vast experience, principles of data science and investment, we
+                    architect your daily wealth flow.</p>
+            </div>
+            <!-- Service 2 -->
+            <div class="service-card-elite reveal-cinematic d1">
+                <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?q=80&w=3542&auto=format&fit=crop"
+                    alt="Education">
+                <h3>Education</h3>
+                <p>Strategic funding models designed to ensure your children's educational aspirations are met without
+                    financial compromise.</p>
+            </div>
+            <!-- Service 3 -->
+            <div class="service-card-elite reveal-cinematic d2">
+                <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=3426&auto=format&fit=crop"
+                    alt="Wealth Creation">
+                <h3>Wealth Creation</h3>
+                <p>Harnessing market telemetry and elite asset selection to build enduring, generational wealth for
+                    high-net-worth families.</p>
+            </div>
+            <!-- Service 4 -->
+            <div class="service-card-elite reveal-cinematic">
+                <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?q=80&w=3540&auto=format&fit=crop"
+                    alt="Retirement">
+                <h3>Retirement</h3>
+                <p>Ensuring financial sovereignty in your senior years with high-precision cashflow engineering and
+                    tax-optimized distributions.</p>
+            </div>
+            <!-- Service 5 -->
+            <div class="service-card-elite reveal-cinematic d1">
+                <img src="https://images.unsplash.com/photo-1560472355-536de3962603?q=80&w=3540&auto=format&fit=crop"
+                    alt="Risk Management">
+                <h3>Risk Management</h3>
+                <p>Risk and return are two sides of the same coin. We help you understand the tradeoffs and protect your
+                    legacy from volatility.</p>
+            </div>
+            <!-- Service 6 -->
+            <div class="service-card-elite reveal-cinematic d2">
+                <img src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?q=80&w=3432&auto=format&fit=crop"
+                    alt="Emergency">
+                <h3>Emergency</h3>
+                <p>Preparing you for the inevitable unexpected. We help you maintain liquidity and stability when it
+                    matters most.</p>
+            </div>
+        </div>
+
+        <div class="service-stats-banner reveal-cinematic">
+            <div class="serv-stat-item">
+                <h2 id="stAUM">0</h2>
+                <span>Crore of AUM</span>
+            </div>
+            <div class="serv-stat-item">
+                <h2 id="stClients">0</h2>
+                <span>Happy Clients</span>
+            </div>
+        </div>
+
+        <section class="curious-section reveal-cinematic">
+            <div class="curious-visual">
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=3540&auto=format&fit=crop"
+                    alt="Curious" style="width:100%; border-radius:30px; box-shadow: var(--shadow-lg);">
+            </div>
+            <div class="curious-content">
+                <span class="pathshala-tag">INVESTORSHALA - SLA Ki Pathshala</span>
+                <h2>Be More <em>Curious</em></h2>
+                <p class="cs-sub" style="margin-bottom: 30px;">Knowledge is having the right answer and Intelligence is
+                    asking the right question. We empower you to ask the right set of questions to make well-informed
+                    financial decisions.</p>
+                <a href="#" class="btn-primary-hero">Let's Explore →</a>
+            </div>
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <img src="assets/logo.png" alt="IPFS Logo" style="height:50px; margin-bottom:20px">
+                <p style="font-size:13px; line-height:1.75; color:var(--text-3)">Invest & Prosper Financial Services
+                    (IPFS) is an AMFI Registered Mutual Fund Distributor helping elite Indian families build wealth
+                    since 2006. ARN-24216.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Methodology</h4><a href="services.html">Services</a><a href="index.html#difference">Our Method</a>
+            </div>
+            <div class="footer-col">
+                <h4>Solutions</h4><a href="index.html#solutions">Capital Growth</a><a href="index.html#goals">Tax
+                    Engineering</a>
+            </div>
+            <div class="footer-col">
+                <h4>Intelligence</h4><a href="calculator.html">Simulator</a><a href="about.html">Our Story</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-copy">Investments in Mutual Funds are subject to market risks. Please read all
+                scheme-related documents carefully before investing. IPFS is an AMFI-Registered Mutual Fund Distributor
+                (ARN-24216).</div>
+            <div class="footer-copy" style="margin-top:10px;">© 2006–2025 www.ipfs-mfd.co.in · All Rights Reserved</div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script type="module" src="./main.js"></script>
+    <script>
+        // Custom stats for services page
+        document.addEventListener('DOMContentLoaded', () => {
+            const obs = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) {
+                    animateValue("stAUM", 0, 2000, 2500);
+                    animateValue("stClients", 0, 8000, 2500);
+                    obs.disconnect();
+                }
+            }, { threshold: 0.5 });
+            obs.observe(document.querySelector('.service-stats-banner'));
+        });
+
+        function animateValue(id, start, end, duration) {
+            let startTimestamp = null;
+            const element = document.getElementById(id);
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const current = Math.floor(progress * (end - start) + start);
+                element.innerHTML = current.toLocaleString('en-IN') + "+";
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+    </script>
+</body>
+
+</html>

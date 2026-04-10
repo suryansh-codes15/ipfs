@@ -1,0 +1,112 @@
+[
+  {
+    "title": "Signal Over Noise",
+    "description": "The definitive IPFS framework for navigating volatility and building lasting generational wealth.",
+    "meta": "Featured Publication",
+    "image_url": "assets/blog_whitepaper.png",
+    "pdf_url": "assets/Signal_Over_Noise .pdf",
+    "read_url": "signal-report.html",
+    "theme": "dark",
+    "is_coming_soon": false,
+    "order_index": 1
+  },
+  {
+    "title": "Annual Market Outlook 2025",
+    "description": "Forward-looking analysis of key macro trends shaping Indian and global markets in 2025.",
+    "meta": "Market Intelligence · 2025",
+    "image_url": "assets/outlook-2025.png",
+    "pdf_url": "assets/Annual Market Outlook 2025.pdf",
+    "read_url": "outlook-2025.html",
+    "theme": "light",
+    "is_coming_soon": false,
+    "order_index": 2
+  },
+  {
+    "title": "Annual Market Outlook 2024",
+    "description": "Equity cycle inflection points and multi-asset strategies mapped for the year 2024.",
+    "meta": "Annual Outlook · 2024",
+    "image_url": "assets/outlook-2024.png",
+    "pdf_url": "assets/Annual Market Outlook 2024.pdf",
+    "read_url": "outlook-2024.html",
+    "theme": "dark",
+    "is_coming_soon": false,
+    "order_index": 3
+  },
+  {
+    "title": "IPFS Market Outlook 2023",
+    "description": "A comprehensive review of 2023's market landscape guiding elite portfolio decisions with precision.",
+    "meta": "Institutional Insights · 2023",
+    "image_url": "assets/outlook-2023.png",
+    "pdf_url": "assets/IPFS Market Outlook 2023.pdf",
+    "read_url": "outlook-2023.html",
+    "theme": "light",
+    "is_coming_soon": false,
+    "order_index": 4
+  },
+  {
+    "title": "Equity Outlook 2020–21",
+    "description": "Global equity frameworks and precision capital allocation for navigating the 2020–21 economic cycle.",
+    "meta": "Equity Research · 2020",
+    "image_url": "assets/equity-outlook.png",
+    "pdf_url": "assets/Equity-Outlook-2020-2021-IPFS.pdf",
+    "read_url": "equity-report.html",
+    "theme": "dark",
+    "is_coming_soon": false,
+    "order_index": 5
+  },
+  {
+    "title": "Nifty 19500: Road Ahead",
+    "description": "Where does the market go after 19500? A pinpoint tactical note with data-backed directional views.",
+    "meta": "Tactical Report · Jul 2023",
+    "image_url": "assets/nifty-road.png",
+    "pdf_url": "assets/Nifty 19500 Market Outlook n way forward July 2023.pdf",
+    "read_url": "nifty-report.html",
+    "theme": "light",
+    "is_coming_soon": false,
+    "order_index": 6
+  },
+  {
+    "title": "Wealth through Cycles",
+    "description": "How understanding market rhythm creates compounding advantages and generational wealth over time.",
+    "meta": "Wealth Philosophy",
+    "image_url": "assets/wealth-cycles.png",
+    "pdf_url": "assets/Wealth Creation thru Market cycles.pdf",
+    "read_url": "wealth-cycles.html",
+    "theme": "dark",
+    "is_coming_soon": false,
+    "order_index": 7
+  },
+  {
+    "title": "Markets: 2000–07 Parallels",
+    "description": "A data-driven study drawing parallels between today's market structure and the historic 2000–07 bull.",
+    "meta": "Historical Analysis",
+    "image_url": "assets/correlation.png",
+    "pdf_url": "assets/Correlation of Current Market situation with 2000-2007 period.pdf",
+    "read_url": "correlation-report.html",
+    "theme": "light",
+    "is_coming_soon": false,
+    "order_index": 8
+  },
+  {
+    "title": "The Compounding Architect",
+    "description": "How structural systematic plans transform modest capital into elite wealth reservoirs over time.",
+    "meta": "Premium Series",
+    "image_url": "assets/wealth-cycles.png",
+    "pdf_url": null,
+    "read_url": null,
+    "theme": "dark",
+    "is_coming_soon": true,
+    "order_index": 9
+  },
+  {
+    "title": "Tax-Optimized Alpha",
+    "description": "Engineered strategies to maximize retained returns through intelligent, proactive tax planning.",
+    "meta": "Wealth Optimization",
+    "image_url": "assets/tax-alpha.png",
+    "pdf_url": null,
+    "read_url": null,
+    "theme": "light",
+    "is_coming_soon": true,
+    "order_index": 10
+  }
+]
