@@ -1,4 +1,4 @@
-import re
+﻿import re
 
 html_path = r'd:\ipfs final\index.html'
 with open(html_path, 'r', encoding='utf-8') as f:

@@ -1,4 +1,4 @@
-import re
+﻿import re
 import os
 
 filepath = r'd:\ipfs final\index.html'
@@ -306,11 +306,11 @@ content = complete_testi_contact_old_pattern.sub(trust_contact_new, content)
 
 # 7. FOOTER LINE
 footer_old = """  <div class="footer-bottom">
-    <div class="footer-copy">© 2006–2025 www.ipfs-mfd.co.in · All Rights Reserved</div>
+    <div class="footer-copy">© 2006$12026 www.ipfs-mfd.co.in · All Rights Reserved</div>
   </div>"""
 footer_new = """  <div class="footer-bottom">
     <div class="footer-copy">Investments in Mutual Funds are subject to market risks. Please read all scheme-related documents carefully before investing.</div>
-    <div class="footer-copy" style="margin-top:10px;">© 2006–2025 www.ipfs-mfd.co.in · All Rights Reserved</div>
+    <div class="footer-copy" style="margin-top:10px;">© 2006$12026 www.ipfs-mfd.co.in · All Rights Reserved</div>
   </div>"""
 content = content.replace(footer_old, footer_new)
 

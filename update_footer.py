@@ -1,4 +1,4 @@
-import os
+﻿import os
 import re
 
 footer_content = """  <footer style="padding: 40px 0 20px;">
@@ -23,7 +23,7 @@ footer_content = """  <footer style="padding: 40px 0 20px;">
       </div>
       
       <div style="padding-top:10px; font-size:10.5px; color:var(--text-4); opacity: 0.7;">
-        © 2006–2025 www.ipfs-mfd.co.in · All Rights Reserved
+        © 2006$12026 www.ipfs-mfd.co.in · All Rights Reserved
       </div>
     </div>
   </footer>"""
