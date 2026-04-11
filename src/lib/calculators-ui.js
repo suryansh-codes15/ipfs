@@ -145,15 +145,16 @@ export function calculateGoal() {
 export function calculateBudget() {
     const getVal = (id) => parseFloat(document.getElementById(id)?.value || 0);
 
-    const incSalary = getVal('inc-salary');
-    const incOther = getVal('inc-other');
-    const expHouse = getVal('exp-house');
-    const expFood = getVal('exp-food');
-    const expUtil = getVal('exp-util');
-    const expMisc = getVal('exp-misc');
+    // All income fields from Excel
+    const totalInc = getVal('inc-salary') + getVal('inc-pension') + getVal('inc-interest')
+        + getVal('inc-nontax') + getVal('inc-taxrefund') + getVal('inc-gifts')
+        + getVal('inc-inherit') + getVal('inc-other');
 
-    const totalInc = incSalary + incOther;
-    const totalExp = expHouse + expFood + expUtil + expMisc;
+    // All expense fields from Excel
+    const totalExp = getVal('exp-house') + getVal('exp-food') + getVal('exp-transport')
+        + getVal('exp-health') + getVal('exp-misc') + getVal('exp-edu')
+        + getVal('exp-depend') + getVal('exp-util') + getVal('exp-insurance')
+        + getVal('exp-entertainment') + getVal('exp-holidays') + getVal('exp-emergency');
 
     const surplus = totalInc - totalExp;
     const ratio = totalInc > 0 ? (totalExp / totalInc) * 100 : 0;
