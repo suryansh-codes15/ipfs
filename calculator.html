@@ -555,6 +555,49 @@
             background: var(--green-soft);
             border-radius: 10px;
         }
+
+        /* GLOBAL DECORATION STYLES */
+        .global-decor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: -2;
+            background: var(--bg);
+            overflow: hidden;
+        }
+
+        .central-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 60vw;
+            height: 60vw;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, transparent 60%);
+            border-radius: 50%;
+        }
+
+        .decor-corner {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            max-width: 65vw;
+            max-height: 65vw;
+            opacity: 0.8;
+        }
+
+        .decor-tl {
+            top: -20px;
+            left: -20px;
+        }
+
+        .decor-br {
+            bottom: -20px;
+            right: -20px;
+        }
     </style>
 </head>
 
@@ -564,6 +607,20 @@
         <svg class="decor-corner decor-tl" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
             <path d="M0,0 L0,220 Q 180,220 280,0 Z" fill="rgba(160, 201, 105, 0.25)" />
             <path d="M0,0 L0,320 Q 240,320 360,0 Z" fill="rgba(160, 201, 105, 0.15)" />
+            <path d="M0,0 L0,400 Q 300,400 450,0 Z" fill="rgba(160, 201, 105, 0.08)" />
+            <g transform="translate(150, 40) rotate(45)">
+                <rect width="24" height="24" fill="#A0C969" />
+            </g>
+            <g transform="translate(80, 100) rotate(45)">
+                <rect width="36" height="36" fill="#C4E091" />
+            </g>
+        </svg>
+        <svg class="decor-corner decor-br" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(400, 400) rotate(180)">
+                <path d="M0,0 L0,220 Q 180,220 280,0 Z" fill="rgba(160, 201, 105, 0.25)" />
+                <path d="M0,0 L0,320 Q 240,320 360,0 Z" fill="rgba(160, 201, 105, 0.15)" />
+                <path d="M0,0 L0,400 Q 300,400 450,0 Z" fill="rgba(160, 201, 105, 0.08)" />
+            </g>
         </svg>
         <div class="central-glow"></div>
     </div>
