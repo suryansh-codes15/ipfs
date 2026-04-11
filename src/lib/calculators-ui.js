@@ -144,11 +144,16 @@ function wizCalcStep2() {
     const inflation = parseFloat(document.getElementById('wiz-inflation').value) / 100 || 0;
     const exp = parseFloat(document.getElementById('wiz-exp').value) || 0;
 
-    const yrs = retAge - age;
-    document.getElementById('wiz-yrs-to-retire').textContent = Math.max(0, yrs);
-    document.getElementById('wiz-yrs-left').value = Math.max(0, yrs);
+    const yrs = Math.max(0, retAge - age);
+    const months = yrs * 12;
+    const monthlyInflation = inflation / 12;
 
-    const fvExp = exp * Math.pow(1 + inflation, Math.max(0, yrs));
+    document.getElementById('wiz-yrs-to-retire').textContent = yrs;
+    document.getElementById('wiz-yrs-left').value = yrs;
+
+    // Use monthly compounding for parity with Excel RMF model
+    const fvExp = exp * Math.pow(1 + monthlyInflation, months);
+
     document.getElementById('wiz-future-exp').textContent = formatINR(fvExp);
     document.getElementById('wiz-future-exp').dataset.raw = fvExp;
 
