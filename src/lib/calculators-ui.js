@@ -202,10 +202,12 @@ function generateSummary() {
     const age = document.getElementById('wiz-age').value;
     const retAge = document.getElementById('wiz-retire-age').value;
     const yrsLeft = document.getElementById('wiz-yrs-left').value;
-    const annuity = document.getElementById('wiz-annuity').value;
+    const annuityRaw = document.getElementById('wiz-future-exp').dataset.raw || 0;
     const corpus = document.getElementById('wiz-corpus-input').value;
     const lump = document.getElementById('wiz-lumpsum').value;
-    const sip = document.getElementById('wiz-sip').dataset.raw;
+    const sip = document.getElementById('wiz-sip').dataset.raw || 0;
+
+    const annuity = parseFloat(annuityRaw);
 
     document.getElementById('sum-yrs').textContent = yrsLeft;
     document.getElementById('sum-lump').textContent = formatINR(parseFloat(lump));
@@ -214,7 +216,7 @@ function generateSummary() {
 
     document.getElementById('sum-age').textContent = age + ' Years';
     document.getElementById('sum-ret-age').textContent = retAge + ' Years';
-    document.getElementById('sum-annuity').textContent = formatINR(parseFloat(annuity));
+    document.getElementById('sum-annuity').textContent = formatINR(annuity);
     document.getElementById('sum-corpus2').textContent = formatINR(parseFloat(corpus));
     document.getElementById('sum-lumps').textContent = formatINR(parseFloat(lump));
     document.getElementById('sum-monthly').textContent = formatINR(parseFloat(sip));
