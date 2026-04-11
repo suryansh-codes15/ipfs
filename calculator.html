@@ -286,6 +286,240 @@
             margin-bottom: 30px;
             color: var(--green-deep);
         }
+
+        /* WIZARD STYLES */
+        .wizard-wrap {
+            background: var(--panel-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--white);
+            border-radius: 32px;
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .wiz-progress {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .wiz-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .wiz-step span {
+            width: 36px;
+            height: 36px;
+            background: var(--white);
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--text-3);
+            transition: all 0.3s;
+        }
+
+        .wiz-step.active span {
+            background: var(--green-deep);
+            border-color: var(--green-deep);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(47, 90, 62, 0.3);
+        }
+
+        .wiz-step.complete span {
+            background: var(--green-soft);
+            border-color: var(--green-soft);
+            color: var(--green-deep);
+        }
+
+        .wiz-step small {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-3);
+        }
+
+        .wiz-step.active small {
+            color: var(--green-deep);
+        }
+
+        .wiz-line {
+            position: absolute;
+            top: 18px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border);
+            z-index: 1;
+        }
+
+        .wiz-card {
+            display: none;
+            animation: slideUpWiz 0.5s ease;
+        }
+
+        .wiz-card.wiz-active {
+            display: block;
+        }
+
+        @keyframes slideUpWiz {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .wiz-eyebrow {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--green-mid);
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+
+        .wiz-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 32px;
+            color: var(--green-deep);
+            margin-bottom: 16px;
+        }
+
+        .wiz-desc {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--text-2);
+            margin-bottom: 24px;
+        }
+
+        .wiz-result-bar {
+            background: var(--green-bg);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-left: 4px solid var(--green-soft);
+        }
+
+        .wiz-result-bar span {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--green-deep);
+        }
+
+        .wiz-result-bar strong {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--green-deep);
+            display: block;
+            margin-top: 4px;
+        }
+
+        .wiz-note {
+            font-size: 13px;
+            color: var(--text-3);
+            font-style: italic;
+            background: rgba(160, 201, 105, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .wiz-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .btn-wiz-next,
+        .btn-wiz-back {
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-wiz-next {
+            background: var(--green-deep);
+            color: var(--gold-light);
+            border: none;
+            box-shadow: 0 4px 15px rgba(47, 90, 62, 0.2);
+        }
+
+        .btn-wiz-next:hover {
+            background: #1a3a26;
+            transform: translateX(4px);
+        }
+
+        .btn-wiz-back {
+            background: transparent;
+            color: var(--text-3);
+            border: 1px solid var(--border);
+        }
+
+        .btn-wiz-back:hover {
+            background: var(--white);
+            border-color: var(--text-3);
+        }
+
+        .wiz-summary-table {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 24px;
+        }
+
+        .sum-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .sum-row:last-child {
+            border-bottom: none;
+        }
+
+        .sum-row span:first-child {
+            font-weight: 600;
+            color: var(--text-2);
+        }
+
+        .sum-row span:last-child {
+            font-weight: 800;
+            color: var(--green-deep);
+        }
+
+        .sum-row-highlight {
+            background: var(--green-bg);
+        }
+
+        .sum-row-highlight span:last-child {
+            color: var(--green-deep);
+            font-size: 18px;
+        }
     </style>
 </head>
 
@@ -330,114 +564,223 @@
             <button class="calc-tab-btn" data-target="budget">Budgeting</button>
         </div>
 
-        <!-- 1. RETIREMENT -->
+        <!-- 1. RETIREMENT WIZARD -->
         <div class="calc-panel active" id="retirement">
-            <div class="calc-inputs">
-                <h3 class="calc-title">Retirement Parameters</h3>
-                <div class="input-group">
-                    <label class="input-label">Current Age <span class="label-val" id="ret-age-val">30</span></label>
-                    <input type="range" id="ret-age" min="18" max="75" value="30">
+            <div class="wizard-wrap">
+
+                <!-- STEP PROGRESS BAR -->
+                <div class="wiz-progress">
+                    <div class="wiz-step active" data-step="1"><span>1</span><small>Welcome</small></div>
+                    <div class="wiz-line"></div>
+                    <div class="wiz-step" data-step="2"><span>2</span><small>Expenses</small></div>
+                    <div class="wiz-line"></div>
+                    <div class="wiz-step" data-step="3"><span>3</span><small>Corpus</small></div>
+                    <div class="wiz-line"></div>
+                    <div class="wiz-step" data-step="4"><span>4</span><small>SIP Plan</small></div>
+                    <div class="wiz-line"></div>
+                    <div class="wiz-step" data-step="5"><span>5</span><small>Summary</small></div>
                 </div>
-                <div class="input-group">
-                    <label class="input-label">Retirement Age <span class="label-val"
-                            id="ret-retire-age-val">60</span></label>
-                    <input type="range" id="ret-retire-age" min="45" max="80" value="60">
-                </div>
-                <div class="input-group">
-                    <label class="input-label">Monthly Expenses Today</label>
-                    <div class="input-text-wrap"><span>₹</span><input type="number" id="ret-exp" class="calc-field"
-                            value="50000"></div>
-                </div>
-                <div class="input-group">
-                    <label class="input-label">Lumpsum Investment</label>
-                    <div class="input-text-wrap"><span>₹</span><input type="number" id="ret-lumpsum" class="calc-field"
-                            value="0"></div>
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                    <div class="input-group"><label class="input-label">Inflation (%)</label><input type="number"
-                            id="ret-inflation" class="calc-field" value="6" style="padding-left:14px;"></div>
-                    <div class="input-group"><label class="input-label">Life Expect.</label><input type="number"
-                            id="ret-life" class="calc-field" value="85" style="padding-left:14px;"></div>
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                    <div class="input-group"><label class="input-label">Exp ROI (Pre) %</label><input type="number"
-                            id="ret-roi-pre" class="calc-field" value="12" style="padding-left:14px;"></div>
-                    <div class="input-group"><label class="input-label">Exp ROI (Post) %</label><input type="number"
-                            id="ret-roi-post" class="calc-field" value="8" style="padding-left:14px;"></div>
-                </div>
-                <button class="btn-calculate" data-calc="ret">Calculate My Retirement</button>
-            </div>
-            <div class="calc-results">
-                <div class="calc-loader" id="ret-loader">
-                    <div class="loader-spinner"></div>
-                    <div class="loader-text">Analyzing Financial DNA...</div>
-                </div>
-                <div class="res-content" id="ret-content">
-                    <div class="res-card">
-                        <div class="res-lbl">Required Retirement Corpus</div>
-                        <div class="res-val" id="res-corpus">₹0</div>
+
+                <!-- STEP 1: WELCOME -->
+                <div class="wiz-card wiz-active" id="wiz-1">
+                    <div class="wiz-eyebrow">Retirement Calculator</div>
+                    <h3 class="wiz-title">Welcome to Your Retirement Planner</h3>
+                    <p class="wiz-desc">Use this tool to find out the future value of your current expenses, calculate
+                        the retirement corpus you need to accumulate and how much you need to save.</p>
+                    <div class="input-group" style="margin-top:32px;">
+                        <label class="input-label">Enter Your Name</label>
+                        <input type="text" id="wiz-name" class="calc-field" placeholder="e.g. Suryansh"
+                            style="padding-left:16px;">
                     </div>
-                    <div class="res-secondary">
-                        <div class="res-lbl">Monthly SIP Needed</div>
-                        <div class="res-sec-val" id="res-sip">₹0</div>
+                    <div class="wiz-nav">
+                        <div></div>
+                        <button class="btn-wiz-next" onclick="wizNext(1)">Get Started →</button>
                     </div>
-                    <div class="res-secondary">
-                        <div class="res-lbl">Monthly Exp. at Ret.</div>
-                        <div class="res-sec-val" id="res-future-exp">₹0</div>
-                    </div>
-                    <p style="font-size:11px; color:var(--text-3); line-height:1.6; font-style:italic;">Note:
-                        Calculations include real-rate adjustments post-retirement.</p>
                 </div>
+
+                <!-- STEP 2: FUTURE EXPENSES -->
+                <div class="wiz-card" id="wiz-2">
+                    <div class="wiz-eyebrow">Step 2 of 5 — Future Value of Expenses</div>
+                    <h3 class="wiz-title">How much will your expenses be at retirement?</h3>
+                    <p class="wiz-desc">This shows the future value of your current expenses at the time of retirement,
+                        adjusted for inflation.</p>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:24px;">
+                        <div class="input-group">
+                            <label class="input-label">My Present Age (Years)</label>
+                            <input type="number" id="wiz-age" class="calc-field" value="30" style="padding-left:14px;"
+                                oninput="wizCalcStep2()">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">I Plan to Retire at (Years)</label>
+                            <input type="number" id="wiz-retire-age" class="calc-field" value="60"
+                                style="padding-left:14px;" oninput="wizCalcStep2()">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Inflation Rate (%)</label>
+                            <input type="number" id="wiz-inflation" class="calc-field" value="6"
+                                style="padding-left:14px;" oninput="wizCalcStep2()">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Current Monthly Expenses (₹)</label>
+                            <input type="number" id="wiz-exp" class="calc-field" value="50000"
+                                style="padding-left:14px;" oninput="wizCalcStep2()">
+                        </div>
+                    </div>
+                    <div class="wiz-result-bar">
+                        <span>Years to Retire: <strong id="wiz-yrs-to-retire">30</strong></span>
+                        <span>Future Monthly Expense: <strong id="wiz-future-exp">₹0</strong></span>
+                    </div>
+                    <p class="wiz-note">Notice how your future expenses are substantially higher due to the effect of
+                        inflation.</p>
+                    <div class="wiz-nav">
+                        <button class="btn-wiz-back" onclick="wizBack(2)">← Back</button>
+                        <button class="btn-wiz-next" onclick="wizNext(2)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3: CORPUS -->
+                <div class="wiz-card" id="wiz-3">
+                    <div class="wiz-eyebrow">Step 3 of 5 — Retirement Corpus</div>
+                    <h3 class="wiz-title">How large does your corpus need to be?</h3>
+                    <p class="wiz-desc">The corpus you need to accumulate to fund your post-retirement lifestyle.
+                        Expenses may differ from your pre-retirement ones.</p>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:24px;">
+                        <div class="input-group">
+                            <label class="input-label">Monthly Withdrawal at Retirement (₹)</label>
+                            <input type="number" id="wiz-annuity" class="calc-field" value="50000"
+                                style="padding-left:14px;" oninput="wizCalcStep3()">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Life Expectancy (Years post-retirement)</label>
+                            <input type="number" id="wiz-post-years" class="calc-field" value="25"
+                                style="padding-left:14px;" oninput="wizCalcStep3()">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Expected Returns Post-Retirement (%)</label>
+                            <input type="number" id="wiz-roi-post" class="calc-field" value="8"
+                                style="padding-left:14px;" oninput="wizCalcStep3()">
+                        </div>
+                    </div>
+                    <div class="wiz-result-bar">
+                        <span>Your Retirement Corpus Required: <strong id="wiz-corpus">₹0</strong></span>
+                    </div>
+                    <p class="wiz-note">Ensure you have this minimum corpus to meet your post-retirement regular
+                        expenses.</p>
+                    <div class="wiz-nav">
+                        <button class="btn-wiz-back" onclick="wizBack(3)">← Back</button>
+                        <button class="btn-wiz-next" onclick="wizNext(3)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 4: SIP -->
+                <div class="wiz-card" id="wiz-4">
+                    <div class="wiz-eyebrow">Step 4 of 5 — Investment Plan</div>
+                    <h3 class="wiz-title">How much should you invest?</h3>
+                    <p class="wiz-desc">Let us calculate how much you need to invest monthly and as a lumpsum to build
+                        the required corpus.</p>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:24px;">
+                        <div class="input-group">
+                            <label class="input-label">Your Retirement Corpus (₹)</label>
+                            <input type="number" id="wiz-corpus-input" class="calc-field" value="0"
+                                style="padding-left:14px;" oninput="wizCalcStep4()">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Years Left for Retirement</label>
+                            <input type="number" id="wiz-yrs-left" class="calc-field" value="30"
+                                style="padding-left:14px;" oninput="wizCalcStep4()">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Lumpsum to Invest Today (₹)</label>
+                            <input type="number" id="wiz-lumpsum" class="calc-field" value="0"
+                                style="padding-left:14px;" oninput="wizCalcStep4()">
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Expected Returns During Accumulation (%)</label>
+                            <input type="number" id="wiz-roi-pre" class="calc-field" value="12"
+                                style="padding-left:14px;" oninput="wizCalcStep4()">
+                        </div>
+                    </div>
+                    <div class="wiz-result-bar">
+                        <span>Monthly SIP Required: <strong id="wiz-sip">₹0</strong></span>
+                    </div>
+                    <p class="wiz-note">Consider investing a higher lumpsum to reduce your monthly SIP burden.</p>
+                    <div class="wiz-nav">
+                        <button class="btn-wiz-back" onclick="wizBack(4)">← Back</button>
+                        <button class="btn-wiz-next" onclick="wizNext(4)">View Summary →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 5: SUMMARY -->
+                <div class="wiz-card" id="wiz-5">
+                    <div class="wiz-eyebrow">Your Retirement Report</div>
+                    <h3 class="wiz-title">Dear <span id="sum-name">Friend</span>,</h3>
+                    <p class="wiz-desc" id="sum-intro">Based on your inputs, you have <strong id="sum-yrs">0</strong>
+                        years to retire. You need to invest <strong id="sum-lump">₹0</strong> as a lump sum and <strong
+                            id="sum-sip">₹0</strong> per month to accumulate a retirement corpus of <strong
+                            id="sum-corpus">₹0</strong>.</p>
+                    <div class="wiz-summary-table">
+                        <div class="sum-row"><span>Present Age</span><span id="sum-age">—</span></div>
+                        <div class="sum-row"><span>Age of Retirement</span><span id="sum-ret-age">—</span></div>
+                        <div class="sum-row"><span>Monthly Withdrawal Post Retirement</span><span
+                                id="sum-annuity">—</span></div>
+                        <div class="sum-row"><span>Retirement Corpus Required</span><span id="sum-corpus2">—</span>
+                        </div>
+                        <div class="sum-row sum-row-highlight"><span>Lump Sum to Invest Today</span><span
+                                id="sum-lumps">—</span></div>
+                        <div class="sum-row sum-row-highlight"><span>Amount to Invest Per Month (SIP)</span><span
+                                id="sum-monthly">—</span></div>
+                    </div>
+                    <div class="wiz-nav">
+                        <button class="btn-wiz-back" onclick="wizBack(5)">← Revise</button>
+                        <button class="btn-wiz-next" onclick="wizReset()">Start Over ↺</button>
+                    </div>
+                </div>
+
             </div>
         </div>
 
         <!-- 2. ALLOCATION -->
         <div class="calc-panel" id="allocation">
-            <div class="calc-inputs">
-                <h3 class="calc-title">Strategic Mix</h3>
-                <div class="input-group">
-                    <label class="input-label">Investible Amount</label>
-                    <div class="input-text-wrap"><span>₹</span><input type="number" id="aa-amount" class="calc-field"
-                            value="1000000"></div>
-                </div>
-                <div class="input-group">
-                    <label class="input-label">Tenure (Years) <span class="label-val"
-                            id="aa-tenure-val">3</span></label>
-                    <input type="range" id="aa-tenure" min="1" max="10" value="3">
-                </div>
-                <div class="input-group">
-                    <label class="input-label">Equity Allocation <span class="label-val"
-                            id="aa-equity-w-val">70%</span></label>
-                    <input type="range" id="aa-equity-w" min="0" max="100" value="70">
-                </div>
-                <div class="input-group">
-                    <label class="input-label">Debt Allocation <span class="label-val"
-                            id="aa-debt-w-val">30%</span></label>
-                    <input type="range" id="aa-debt-w" min="0" max="100" value="30">
-                </div>
-                <button class="btn-calculate" data-calc="allocation">Generate Portfolio Strategy</button>
+            <div class="input-group">
+                <label class="input-label">Investible Amount</label>
+                <div class="input-text-wrap"><span>₹</span><input type="number" id="aa-amount" class="calc-field"
+                        value="1000000"></div>
             </div>
-            <div class="calc-results">
-                <div class="calc-loader" id="allocation-loader">
-                    <div class="loader-spinner"></div>
-                    <div class="loader-text">Modeling Market Scenarios...</div>
+            <div class="input-group">
+                <label class="input-label">Tenure (Years) <span class="label-val" id="aa-tenure-val">3</span></label>
+                <input type="range" id="aa-tenure" min="1" max="10" value="3">
+            </div>
+            <div class="input-group">
+                <label class="input-label">Equity Allocation <span class="label-val"
+                        id="aa-equity-w-val">70%</span></label>
+                <input type="range" id="aa-equity-w" min="0" max="100" value="70">
+            </div>
+            <div class="input-group">
+                <label class="input-label">Debt Allocation <span class="label-val" id="aa-debt-w-val">30%</span></label>
+                <input type="range" id="aa-debt-w" min="0" max="100" value="30">
+            </div>
+            <button class="btn-calculate" data-calc="allocation">Generate Portfolio Strategy</button>
+        </div>
+        <div class="calc-results">
+            <div class="calc-loader" id="allocation-loader">
+                <div class="loader-spinner"></div>
+                <div class="loader-text">Modeling Market Scenarios...</div>
+            </div>
+            <div class="res-content" id="allocation-content">
+                <div class="res-card" style="background: linear-gradient(135deg, #1a4a6e, #0d2e46);">
+                    <div class="res-lbl">Projected Portfolio Value</div>
+                    <div class="res-val" id="res-mf-val" style="color:var(--gold-light)">₹0</div>
                 </div>
-                <div class="res-content" id="allocation-content">
-                    <div class="res-card" style="background: linear-gradient(135deg, #1a4a6e, #0d2e46);">
-                        <div class="res-lbl">Projected Portfolio Value</div>
-                        <div class="res-val" id="res-mf-val" style="color:var(--gold-light)">₹0</div>
-                    </div>
-                    <div class="res-secondary">
-                        <div class="res-lbl">Standard FD (Post-Tax)</div>
-                        <div class="res-sec-val" id="res-fd-val">₹0</div>
-                    </div>
-                    <div class="res-card"
-                        style="background:rgba(160, 201, 105, 0.1); border:1px dashed var(--green-soft);">
-                        <div class="res-lbl" style="color:var(--green-deep);">Expected Wealth Alpha</div>
-                        <div class="res-val" id="res-alpha" style="color:var(--green-deep); font-size:24px;">+ ₹0</div>
-                    </div>
+                <div class="res-secondary">
+                    <div class="res-lbl">Standard FD (Post-Tax)</div>
+                    <div class="res-sec-val" id="res-fd-val">₹0</div>
+                </div>
+                <div class="res-card" style="background:rgba(160, 201, 105, 0.1); border:1px dashed var(--green-soft);">
+                    <div class="res-lbl" style="color:var(--green-deep);">Expected Wealth Alpha</div>
+                    <div class="res-val" id="res-alpha" style="color:var(--green-deep); font-size:24px;">+ ₹0</div>
                 </div>
             </div>
+        </div>
         </div>
 
         <!-- 3. WEALTH GOAL -->

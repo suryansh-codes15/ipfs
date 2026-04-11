@@ -26,7 +26,134 @@ export function initCalculators() {
             triggerCalculation(type);
         });
     });
+
+    // EXPOSE WIZARD FUNCTIONS TO GLOBAL SCOPE
+    window.wizNext = wizNext;
+    window.wizBack = wizBack;
+    window.wizReset = wizReset;
+    window.wizCalcStep2 = wizCalcStep2;
+    window.wizCalcStep3 = wizCalcStep3;
+    window.wizCalcStep4 = wizCalcStep4;
 }
+
+// --- RETIREMENT WIZARD LOGIC ---
+
+function wizNext(currentStep) {
+    if (currentStep === 1) {
+        const name = document.getElementById('wiz-name').value || 'Friend';
+        document.getElementById('sum-name').textContent = name;
+        wizCalcStep2();
+    }
+    if (currentStep === 2) wizCalcStep3();
+    if (currentStep === 3) {
+        const corpus = parseFloat(document.getElementById('wiz-corpus').dataset.raw || 0);
+        document.getElementById('wiz-corpus-input').value = Math.round(corpus);
+        wizCalcStep4();
+    }
+    if (currentStep === 4) generateSummary();
+
+    const currentCard = document.getElementById(`wiz-${currentStep}`);
+    const nextCard = document.getElementById(`wiz-${currentStep + 1}`);
+
+    if (nextCard) {
+        currentCard.classList.remove('wiz-active');
+        nextCard.classList.add('wiz-active');
+        updateProgress(currentStep + 1);
+    }
+}
+
+function wizBack(currentStep) {
+    const currentCard = document.getElementById(`wiz-${currentStep}`);
+    const prevCard = document.getElementById(`wiz-${currentStep - 1}`);
+
+    if (prevCard) {
+        currentCard.classList.remove('wiz-active');
+        prevCard.classList.add('wiz-active');
+        updateProgress(currentStep - 1);
+    }
+}
+
+function wizReset() {
+    document.querySelectorAll('.wiz-card').forEach(c => c.classList.remove('wiz-active'));
+    document.getElementById('wiz-1').classList.add('wiz-active');
+    updateProgress(1);
+}
+
+function updateProgress(step) {
+    document.querySelectorAll('.wiz-step').forEach(s => {
+        const sNum = parseInt(s.dataset.step);
+        s.classList.remove('active', 'complete');
+        if (sNum === step) s.classList.add('active');
+        if (sNum < step) s.classList.add('complete');
+    });
+}
+
+function wizCalcStep2() {
+    const age = parseFloat(document.getElementById('wiz-age').value) || 0;
+    const retAge = parseFloat(document.getElementById('wiz-retire-age').value) || 0;
+    const inflation = parseFloat(document.getElementById('wiz-inflation').value) / 100 || 0;
+    const exp = parseFloat(document.getElementById('wiz-exp').value) || 0;
+
+    const yrs = retAge - age;
+    document.getElementById('wiz-yrs-to-retire').textContent = Math.max(0, yrs);
+    document.getElementById('wiz-yrs-left').value = Math.max(0, yrs);
+
+    const fvExp = exp * Math.pow(1 + inflation, Math.max(0, yrs));
+    document.getElementById('wiz-future-exp').textContent = formatINR(fvExp);
+    document.getElementById('wiz-future-exp').dataset.raw = fvExp;
+    document.getElementById('wiz-annuity').value = Math.round(fvExp);
+}
+
+function wizCalcStep3() {
+    const annuity = parseFloat(document.getElementById('wiz-annuity').value) || 0;
+    const lifePost = parseFloat(document.getElementById('wiz-post-years').value) || 0;
+    const roiPost = parseFloat(document.getElementById('wiz-roi-post').value) / 100 || 0;
+    const inflation = (parseFloat(document.getElementById('wiz-inflation').value) || 6) / 100;
+
+    const realRate = (1 + roiPost) / (1 + inflation) - 1;
+    const corpus = -Finance.PV(realRate, lifePost, annuity * 12, 0, 1);
+
+    document.getElementById('wiz-corpus').textContent = formatINR(corpus);
+    document.getElementById('wiz-corpus').dataset.raw = corpus;
+}
+
+function wizCalcStep4() {
+    const corpus = parseFloat(document.getElementById('wiz-corpus-input').value) || 0;
+    const yrs = parseFloat(document.getElementById('wiz-yrs-left').value) || 0;
+    const lump = parseFloat(document.getElementById('wiz-lumpsum').value) || 0;
+    const roiPre = parseFloat(document.getElementById('wiz-roi-pre').value) / 100 || 0;
+
+    const fvLump = Finance.FV(roiPre / 12, yrs * 12, 0, -lump);
+    const balanceCorpus = Math.max(0, corpus - fvLump);
+    const sip = -Finance.PMT(roiPre / 12, yrs * 12, 0, balanceCorpus);
+
+    document.getElementById('wiz-sip').textContent = formatINR(sip);
+    document.getElementById('wiz-sip').dataset.raw = sip;
+}
+
+function generateSummary() {
+    const age = document.getElementById('wiz-age').value;
+    const retAge = document.getElementById('wiz-retire-age').value;
+    const yrsLeft = document.getElementById('wiz-yrs-left').value;
+    const annuity = document.getElementById('wiz-annuity').value;
+    const corpus = document.getElementById('wiz-corpus-input').value;
+    const lump = document.getElementById('wiz-lumpsum').value;
+    const sip = document.getElementById('wiz-sip').dataset.raw;
+
+    document.getElementById('sum-yrs').textContent = yrsLeft;
+    document.getElementById('sum-lump').textContent = formatINR(parseFloat(lump));
+    document.getElementById('sum-sip').textContent = formatINR(parseFloat(sip));
+    document.getElementById('sum-corpus').textContent = formatINR(parseFloat(corpus));
+
+    document.getElementById('sum-age').textContent = age + ' Years';
+    document.getElementById('sum-ret-age').textContent = retAge + ' Years';
+    document.getElementById('sum-annuity').textContent = formatINR(parseFloat(annuity));
+    document.getElementById('sum-corpus2').textContent = formatINR(parseFloat(corpus));
+    document.getElementById('sum-lumps').textContent = formatINR(parseFloat(lump));
+    document.getElementById('sum-monthly').textContent = formatINR(parseFloat(sip));
+}
+
+// --- STANDARD CALCULATION SUTIE ---
 
 function triggerCalculation(type) {
     const loader = document.getElementById(type + '-loader');
@@ -34,14 +161,11 @@ function triggerCalculation(type) {
 
     if (!loader || !content) return;
 
-    // 1. Show Loader, Hide Content
     loader.style.display = 'flex';
     content.style.opacity = '0';
     content.style.transform = 'translateY(20px)';
 
-    // 2. Wait 2.5 seconds (Cinematic delay)
     setTimeout(() => {
-        // 3. Perform Logic
         try {
             if (type === 'ret') calculateRetirement();
             if (type === 'allocation') calculateAllocation();
@@ -51,10 +175,8 @@ function triggerCalculation(type) {
             console.error('Calculation Error:', err);
         }
 
-        // 4. Hide Loader
         loader.style.display = 'none';
 
-        // 5. Animate In Result
         gsap.to(content, {
             opacity: 1,
             y: 0,
@@ -64,116 +186,49 @@ function triggerCalculation(type) {
     }, 2500);
 }
 
-/** 1. RETIREMENT ENGINEER **/
-export function calculateRetirement() {
-    const getVal = (id) => parseFloat(document.getElementById(id)?.value || 0);
+// Keep the standard calculation functions for other tabs
+export function calculateRetirement() { /* Old version if needed, but wizard replaces it */ }
 
-    const age = getVal('ret-age');
-    const retireAge = getVal('ret-retire-age');
-    const exp = getVal('ret-exp');
-    const inflation = getVal('ret-inflation') / 100;
-    const roiPre = getVal('ret-roi-pre') / 100 || 0.12;
-    const roiPost = getVal('ret-roi-post') / 100 || 0.08;
-    const life = getVal('ret-life');
-    const lumpsum = getVal('ret-lumpsum');
-
-    const yrsToRetire = retireAge - age;
-    const yrsPostRetire = life - retireAge;
-
-    if (yrsToRetire < 0 || yrsPostRetire < 0) return;
-
-    const futureExp = exp * Math.pow(1 + inflation, yrsToRetire);
-    const effectiveRatePost = (1 + roiPost) / (1 + inflation) - 1;
-    const corpus = -Finance.PV(effectiveRatePost, yrsPostRetire, futureExp * 12, 0, 1);
-    const fvLumpsum = Finance.FV(roiPre / 12, yrsToRetire * 12, 0, -lumpsum);
-    const remainingCorpus = corpus - fvLumpsum;
-    const monthlySIP = -Finance.PMT(roiPre / 12, yrsToRetire * 12, 0, remainingCorpus);
-
-    updateResults('ret', {
-        'res-future-exp': futureExp,
-        'res-corpus': corpus,
-        'res-sip': monthlySIP
-    });
-}
-
-/** 2. ASSET ALLOCATION **/
 export function calculateAllocation() {
     const getVal = (id) => parseFloat(document.getElementById(id)?.value || 0);
-
     const amount = getVal('aa-amount');
     const tenure = getVal('aa-tenure');
     const eqW = getVal('aa-equity-w') / 100;
     const debtW = getVal('aa-debt-w') / 100;
-
-    const eqReturn = 0.15;
-    const debtReturn = 0.08;
-    const fdReturn = 0.07;
-    const taxRate = 0.30;
-
+    const eqReturn = 0.15, debtReturn = 0.08, fdReturn = 0.07, taxRate = 0.30;
     const portfolioReturn = (eqW * eqReturn) + (debtW * debtReturn);
     const mfValue = amount * Math.pow(1 + portfolioReturn, tenure);
     const fdValueFinal = amount * Math.pow(1 + fdReturn * (1 - taxRate), tenure);
     const alpha = mfValue - fdValueFinal;
-
-    updateResults('aa', {
-        'res-mf-val': mfValue,
-        'res-fd-val': fdValueFinal,
-        'res-alpha': alpha
-    });
+    updateResults('aa', { 'res-mf-val': mfValue, 'res-fd-val': fdValueFinal, 'res-alpha': alpha });
 }
 
-/** 3. WEALTH GOAL **/
 export function calculateGoal() {
     const getVal = (id) => parseFloat(document.getElementById(id)?.value || 0);
-
     const target = getVal('goal-target');
     const yrs = getVal('goal-yrs');
     const roi = getVal('goal-roi') / 100;
-
     if (yrs <= 0) return;
-
     const sipNeeded = -Finance.PMT(roi / 12, yrs * 12, 0, target);
     const lumpsumNeeded = -Finance.PV(roi, yrs, 0, target);
-
-    updateResults('goal', {
-        'res-goal-sip': sipNeeded,
-        'res-goal-lump': lumpsumNeeded
-    });
+    updateResults('goal', { 'res-goal-sip': sipNeeded, 'res-goal-lump': lumpsumNeeded });
 }
 
-/** 4. BUDGET TRACKER **/
 export function calculateBudget() {
     const getVal = (id) => parseFloat(document.getElementById(id)?.value || 0);
-
-    // All income fields from Excel
-    const totalInc = getVal('inc-salary') + getVal('inc-pension') + getVal('inc-interest')
-        + getVal('inc-nontax') + getVal('inc-taxrefund') + getVal('inc-gifts')
-        + getVal('inc-inherit') + getVal('inc-other');
-
-    // All expense fields from Excel
-    const totalExp = getVal('exp-house') + getVal('exp-food') + getVal('exp-transport')
-        + getVal('exp-health') + getVal('exp-misc') + getVal('exp-edu')
-        + getVal('exp-depend') + getVal('exp-util') + getVal('exp-insurance')
-        + getVal('exp-entertainment') + getVal('exp-holidays') + getVal('exp-emergency');
-
+    const totalInc = getVal('inc-salary') + getVal('inc-pension') + getVal('inc-interest') + getVal('inc-nontax') + getVal('inc-taxrefund') + getVal('inc-gifts') + getVal('inc-inherit') + getVal('inc-other');
+    const totalExp = getVal('exp-house') + getVal('exp-food') + getVal('exp-transport') + getVal('exp-health') + getVal('exp-misc') + getVal('exp-edu') + getVal('exp-depend') + getVal('exp-util') + getVal('exp-insurance') + getVal('exp-entertainment') + getVal('exp-holidays') + getVal('exp-emergency');
     const surplus = totalInc - totalExp;
     const ratio = totalInc > 0 ? (totalExp / totalInc) * 100 : 0;
-
-    updateResults('bud', {
-        'res-surplus': surplus,
-        'res-exp-ratio': ratio
-    });
+    updateResults('bud', { 'res-surplus': surplus, 'res-exp-ratio': ratio });
 }
 
 function updateResults(prefix, data) {
     for (const [id, val] of Object.entries(data)) {
         const el = document.getElementById(id);
         if (el) {
-            if (id.includes('ratio')) {
-                el.textContent = val.toFixed(1) + '%';
-            } else {
-                el.textContent = formatINR(val);
-            }
+            if (id.includes('ratio')) el.textContent = val.toFixed(1) + '%';
+            else el.textContent = formatINR(val);
         }
     }
 }
@@ -182,9 +237,7 @@ function formatINR(val) {
     if (val >= 10000000) return '₹' + (val / 10000000).toFixed(2) + ' Cr';
     if (val >= 100000) return '₹' + (val / 100000).toFixed(2) + ' Lakh';
     return new Intl.NumberFormat('en-IN', {
-        style: 'currency',
-        currency: 'INR',
-        maximumFractionDigits: 0
+        style: 'currency', currency: 'INR', maximumFractionDigits: 0
     }).format(val);
 }
 
