@@ -36,72 +36,124 @@ export function initCalculators() {
     window.wizCalcStep4 = wizCalcStep4;
     window.sumAA = sumAA;
     window.calculateAssetAllocation = calculateAssetAllocation;
+
+    // Initialize all calculations
+    setTimeout(() => {
+        if (typeof sumAA === 'function') sumAA();
+    }, 500);
 }
 
-// --- ASSET ALLOCATION (NEW LOGIC) ---
-
 function sumAA() {
-    let totalAlloc = 0;
-    let totalWRet = 0;
-    let totalWDebt = 0;
-    let totalWEquity = 0;
+    try {
+        let totalAlloc = 0;
+        let totalWRet = 0;
+        let totalWDebt = 0;
+        let totalWEquity = 0;
 
-    for (let i = 1; i <= 5; i++) {
-        const alloc = parseFloat(document.getElementById(`aa-alloc-${i}`).value) || 0;
-        const ret = parseFloat(document.getElementById(`aa-ret-${i}`).value) || 0;
-        const dPct = parseFloat(document.getElementById(`aa-debt-${i}`).value) || 0;
-        const ePct = parseFloat(document.getElementById(`aa-equity-${i}`).value) || 0;
+        for (let i = 1; i <= 5; i++) {
+            const allocEl = document.getElementById(`aa-alloc-${i}`);
+            const retEl = document.getElementById(`aa-ret-${i}`);
+            const dPctEl = document.getElementById(`aa-debt-${i}`);
+            const ePctEl = document.getElementById(`aa-equity-${i}`);
 
-        const wRet = (alloc / 100) * ret;
-        const wDebt = (alloc / 100) * dPct;
-        const wEquity = (alloc / 100) * ePct;
+            if (!allocEl || !retEl || !dPctEl || !ePctEl) continue;
 
-        document.getElementById(`aa-w-${i}`).textContent = wRet.toFixed(2) + '%';
-        document.getElementById(`aa-wd-${i}`).textContent = wDebt.toFixed(2);
-        document.getElementById(`aa-we-${i}`).textContent = wEquity.toFixed(2);
+            const alloc = parseFloat(allocEl.value) || 0;
+            const ret = parseFloat(retEl.value) || 0;
+            const dPct = parseFloat(dPctEl.value) || 0;
+            const ePct = parseFloat(ePctEl.value) || 0;
 
-        totalAlloc += alloc;
-        totalWRet += wRet;
-        totalWDebt += wDebt;
-        totalWEquity += wEquity;
-    }
+            const wRet = (alloc / 100) * ret;
+            const wDebt = (alloc / 100) * dPct;
+            const wEquity = (alloc / 100) * ePct;
 
-    document.getElementById('aa-alloc-total').textContent = totalAlloc + '%';
-    document.getElementById('aa-w-total').textContent = totalWRet.toFixed(2) + '%';
-    document.getElementById('aa-w-total').dataset.val = totalWRet;
-    document.getElementById('aa-wd-total').textContent = totalWDebt.toFixed(2);
-    document.getElementById('aa-we-total').textContent = totalWEquity.toFixed(2);
+            const wRetEl = document.getElementById(`aa-w-${i}`);
+            const wDebtEl = document.getElementById(`aa-wd-${i}`);
+            const wEquityEl = document.getElementById(`aa-we-${i}`);
 
-    if (totalAlloc !== 100) {
-        document.getElementById('aa-alloc-total').style.color = '#ff6b6b';
-    } else {
-        document.getElementById('aa-alloc-total').style.color = '#fff';
+            if (wRetEl) wRetEl.textContent = wRet.toFixed(2) + '%';
+            if (wDebtEl) wDebtEl.textContent = wDebt.toFixed(2);
+            if (wEquityEl) wEquityEl.textContent = wEquity.toFixed(2);
+
+            totalAlloc += alloc;
+            totalWRet += wRet;
+            totalWDebt += wDebt;
+            totalWEquity += wEquity;
+        }
+
+        const allocTotalEl = document.getElementById('aa-alloc-total');
+        const wRetTotalEl = document.getElementById('aa-w-total');
+        const wdTotalEl = document.getElementById('aa-wd-total');
+        const weTotalEl = document.getElementById('aa-we-total');
+
+        if (allocTotalEl) {
+            allocTotalEl.textContent = totalAlloc + '%';
+            allocTotalEl.style.color = totalAlloc !== 100 ? '#ff6b6b' : '#fff';
+        }
+        if (wRetTotalEl) {
+            wRetTotalEl.textContent = totalWRet.toFixed(2) + '%';
+            wRetTotalEl.dataset.val = totalWRet;
+        }
+        if (wdTotalEl) wdTotalEl.textContent = totalWDebt.toFixed(2);
+        if (weTotalEl) weTotalEl.textContent = totalWEquity.toFixed(2);
+    } catch (e) {
+        console.error('sumAA Error:', e);
     }
 }
 
 function calculateAssetAllocation() {
-    const principal = parseFloat(document.getElementById('aa-principal').value) || 0;
-    const yrs = parseFloat(document.getElementById('aa-yrs').value) || 0;
-    const pfReturn = parseFloat(document.getElementById('aa-w-total').dataset.val || 10.65) / 100;
+    try {
+        const principalEl = document.getElementById('aa-principal');
+        const yrsEl = document.getElementById('aa-yrs');
+        const totalWRetEl = document.getElementById('aa-w-total');
 
-    // Standard FD: 7.5% Pre-tax, 30% Tax rate
-    const fdReturnPostTax = 0.075 * (1 - 0.30);
+        if (!principalEl || !yrsEl || !totalWRetEl) return;
 
-    const pfValue = principal * Math.pow(1 + pfReturn, yrs);
-    const fdValue = principal * Math.pow(1 + fdReturnPostTax, yrs);
-    const alpha = pfValue - fdValue;
+        const principal = parseFloat(principalEl.value) || 0;
+        const yrs = parseFloat(yrsEl.value) || 0;
+        const pfReturn = parseFloat(totalWRetEl.dataset.val || 10.65) / 100;
 
-    document.getElementById('aa-comparison').style.display = 'block';
-    document.getElementById('res-pf-val').textContent = formatINR(pfValue);
-    document.getElementById('res-fd-val').textContent = formatINR(fdValue);
-    document.getElementById('res-pf-ret').textContent = (pfReturn * 100).toFixed(2) + '%';
-    document.getElementById('res-alpha-val').textContent = formatINR(alpha);
+        // Standard FD: 7.5% Pre-tax, 30% Tax rate
+        const fdReturnPostTax = 0.075 * (1 - 0.30);
 
-    // Populate the Debt/Equity breakdown
-    document.getElementById('res-total-debt').textContent = document.getElementById('aa-wd-total').textContent + '%';
-    document.getElementById('res-total-equity').textContent = document.getElementById('aa-we-total').textContent + '%';
+        const pfValue = principal * Math.pow(1 + pfReturn, yrs);
+        const fdValue = principal * Math.pow(1 + fdReturnPostTax, yrs);
+        const alpha = pfValue - fdValue;
 
-    gsap.from('#aa-comparison', { opacity: 0, y: 30, duration: 0.8 });
+        const comparisonContainer = document.getElementById('aa-comparison');
+        if (comparisonContainer) {
+            comparisonContainer.style.display = 'block';
+            comparisonContainer.style.opacity = '1';
+        }
+
+        const pfValEl = document.getElementById('res-pf-val');
+        const fdValEl = document.getElementById('res-fd-val');
+        const pfRetEl = document.getElementById('res-pf-ret');
+        const alphaValEl = document.getElementById('res-alpha-val');
+        const totalDebtEl = document.getElementById('res-total-debt');
+        const totalEquityEl = document.getElementById('res-total-equity');
+
+        if (pfValEl) pfValEl.textContent = formatINR(pfValue);
+        if (fdValEl) fdValEl.textContent = formatINR(fdValue);
+        if (pfRetEl) pfRetEl.textContent = (pfReturn * 100).toFixed(2) + '%';
+        if (alphaValEl) alphaValEl.textContent = formatINR(alpha);
+
+        // Populate the Debt/Equity breakdown
+        const wdTotalEl = document.getElementById('aa-wd-total');
+        const weTotalEl = document.getElementById('aa-we-total');
+        if (totalDebtEl && wdTotalEl) totalDebtEl.textContent = wdTotalEl.textContent + '%';
+        if (totalEquityEl && weTotalEl) totalEquityEl.textContent = weTotalEl.textContent + '%';
+
+        if (window.gsap && comparisonContainer) {
+            gsap.killTweensOf(comparisonContainer);
+            gsap.fromTo(comparisonContainer,
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 0.6, clearProps: 'transform' }
+            );
+        }
+    } catch (e) {
+        console.error('calculateAssetAllocation Error:', e);
+    }
 }
 
 // --- STANDARD CALCULATION SUITE ---
