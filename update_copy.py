@@ -17,7 +17,7 @@ html = re.sub(
 )
 html = re.sub(
     r'<div class="trust-item"><span class="trust-check">✓</span>27\+ Years Mastery</div>',
-    '<div class="trust-item"><span class="trust-check">✓</span>27+ Years Mastery</div>',
+    '<div class="trust-item"><span class="trust-check">✓</span>26+ Years Experience</div>',
     html, flags=re.DOTALL
 )
 html = re.sub(

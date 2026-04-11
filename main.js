@@ -302,7 +302,7 @@ const statsEl = document.getElementById('stats');
 if (statsEl) {
   const statsObs = new IntersectionObserver(entries => {
     if (entries[0].isIntersecting) {
-      countUp('s1', 27, '');
+      countUp('s1', 26, '');
       countUp('s2', 1200, '');
       countUp('s3', 500, '');
       countUp('s4', 40, '');
