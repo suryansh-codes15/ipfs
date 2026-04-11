@@ -151,17 +151,29 @@ function wizCalcStep2() {
     const fvExp = exp * Math.pow(1 + inflation, Math.max(0, yrs));
     document.getElementById('wiz-future-exp').textContent = formatINR(fvExp);
     document.getElementById('wiz-future-exp').dataset.raw = fvExp;
-    document.getElementById('wiz-annuity').value = Math.round(fvExp);
+
+    // Update the future expense display in Step 3
+    if (document.getElementById('wiz-future-exp-val')) {
+        document.getElementById('wiz-future-exp-val').textContent = formatINR(fvExp);
+        document.getElementById('wiz-future-exp-val').dataset.raw = fvExp;
+    }
 }
 
 function wizCalcStep3() {
-    const annuity = parseFloat(document.getElementById('wiz-annuity').value) || 0;
+    const annuity = parseFloat(document.getElementById('wiz-future-exp-val').dataset.raw || 0);
     const lifePost = parseFloat(document.getElementById('wiz-post-years').value) || 0;
     const roiPost = parseFloat(document.getElementById('wiz-roi-post').value) / 100 || 0;
-    const inflation = (parseFloat(document.getElementById('wiz-inflation').value) || 6) / 100;
 
-    const realRate = (1 + roiPost) / (1 + inflation) - 1;
-    const corpus = -Finance.PV(realRate, lifePost, annuity * 12, 0, 1);
+    // Use monthly PVA formula: PV = PMT * [(1 - (1+r)^-n) / r]
+    const monthlyRate = roiPost / 12;
+    const months = lifePost * 12;
+
+    let corpus = 0;
+    if (monthlyRate > 0) {
+        corpus = annuity * ((1 - Math.pow(1 + monthlyRate, -months)) / monthlyRate);
+    } else {
+        corpus = annuity * months;
+    }
 
     document.getElementById('wiz-corpus').textContent = formatINR(corpus);
     document.getElementById('wiz-corpus').dataset.raw = corpus;
