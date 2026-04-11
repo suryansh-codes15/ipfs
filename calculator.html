@@ -24,7 +24,7 @@
 
         .calc-hub {
             max-width: 1200px;
-            margin: 0 auto 120px;
+            margin: 0 auto 80px;
             padding: 0 6%;
         }
 
@@ -65,15 +65,14 @@
         }
 
         .calc-panel.active {
+            display: block;
+            /* Changed from grid to block to fix height/gap issues */
+        }
+
+        .calc-panel-grid.active {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 40px;
-        }
-
-        @media (max-width: 992px) {
-            .calc-panel.active {
-                grid-template-columns: 1fr;
-            }
         }
 
         .calc-inputs {
@@ -88,15 +87,13 @@
         /* RESULTS & LOADER */
         .calc-results {
             position: relative;
-            min-height: 200px;
+            min-height: auto;
+            /* Removed fixed min-height */
         }
 
         .res-content {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            opacity: 0;
-            transform: translateY(20px);
+            display: none;
+            /* Changed to none for panels that don't need it */
         }
 
         .calc-loader {
