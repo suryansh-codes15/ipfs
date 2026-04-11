@@ -72,3 +72,34 @@ export const Finance = {
         return Math.pow(1 + nominal_rate / npery, npery) - 1;
     }
 };
+
+/**
+ * High-fidelity retirement corpus calculator matching Reliance MF (RMF) Excel model.
+ */
+export function calculateRetirementCorpus(monthlyExp, inflation, retAge, currentAge, lifeExp, postRetRet) {
+    const yearsToRet = Math.max(0, retAge - currentAge);
+    const monthsToRet = yearsToRet * 12;
+    const monthlyInflation = (inflation / 100) / 12;
+
+    // 1. Future Value of Expense at Retirement (Monthly Compounding Inflation)
+    // Excel: FV(Rate/12, Yrs*12, 0, -MonthlyExp, 0)
+    const expAtRet = monthlyExp * Math.pow(1 + monthlyInflation, monthsToRet);
+
+    // 2. Retirement Corpus Required (Annuity PV)
+    // Reliance MF Uses: PV(ROI_POST/12, LIFE_EXP*12, -EXP_AT_RET, 0, 0)
+    const monthlyRatePost = (postRetRet / 100) / 12;
+    const totalMonthsPost = lifeExp * 12;
+
+    let corpus = 0;
+    if (monthlyRatePost > 0) {
+        corpus = expAtRet * ((1 - Math.pow(1 + monthlyRatePost, -totalMonthsPost)) / monthlyRatePost);
+    } else {
+        corpus = expAtRet * totalMonthsPost;
+    }
+
+    return {
+        yearsToRet,
+        expAtRet,
+        corpus
+    };
+}
