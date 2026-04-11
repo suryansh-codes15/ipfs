@@ -17,7 +17,7 @@
         }
 
         .calc-hero {
-            padding: 140px 6% 60px;
+            padding: 80px 6% 40px;
             text-align: center;
             background: linear-gradient(to bottom, var(--bg) 0%, var(--bg2) 100%);
         }
@@ -88,7 +88,7 @@
         /* RESULTS & LOADER */
         .calc-results {
             position: relative;
-            min-height: 400px;
+            min-height: 200px;
         }
 
         .res-content {
@@ -520,6 +520,30 @@
             color: var(--green-deep);
             font-size: 18px;
         }
+
+        .aa-mini-input {
+            width: 50px;
+            padding: 4px 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 700;
+            color: var(--green-deep);
+            background: var(--white);
+        }
+
+        .aa-table td {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .aa-table-wrap::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .aa-table-wrap::-webkit-scrollbar-thumb {
+            background: var(--green-soft);
+            border-radius: 10px;
+        }
     </style>
 </head>
 
@@ -739,46 +763,135 @@
             </div>
         </div>
 
-        <!-- 2. ALLOCATION -->
         <div class="calc-panel" id="allocation">
-            <div class="input-group">
-                <label class="input-label">Investible Amount</label>
-                <div class="input-text-wrap"><span>₹</span><input type="number" id="aa-amount" class="calc-field"
-                        value="1000000"></div>
-            </div>
-            <div class="input-group">
-                <label class="input-label">Tenure (Years) <span class="label-val" id="aa-tenure-val">3</span></label>
-                <input type="range" id="aa-tenure" min="1" max="10" value="3">
-            </div>
-            <div class="input-group">
-                <label class="input-label">Equity Allocation <span class="label-val"
-                        id="aa-equity-w-val">70%</span></label>
-                <input type="range" id="aa-equity-w" min="0" max="100" value="70">
-            </div>
-            <div class="input-group">
-                <label class="input-label">Debt Allocation <span class="label-val" id="aa-debt-w-val">30%</span></label>
-                <input type="range" id="aa-debt-w" min="0" max="100" value="30">
-            </div>
-            <button class="btn-calculate" data-calc="allocation">Generate Portfolio Strategy</button>
-        </div>
-        <div class="calc-results">
-            <div class="calc-loader" id="allocation-loader">
-                <div class="loader-spinner"></div>
-                <div class="loader-text">Modeling Market Scenarios...</div>
-            </div>
-            <div class="res-content" id="allocation-content">
-                <div class="res-card" style="background: linear-gradient(135deg, #1a4a6e, #0d2e46);">
-                    <div class="res-lbl">Projected Portfolio Value</div>
-                    <div class="res-val" id="res-mf-val" style="color:var(--gold-light)">₹0</div>
+            <div class="wizard-wrap" style="grid-column: span 2; max-width: 1000px;">
+                <div class="wiz-eyebrow">Strategic Asset Allocation</div>
+                <h3 class="wiz-title">Scheme Allocation Matrix</h3>
+                <p class="wiz-desc">Define your portfolio mix across Equity and Debt schemes to optimize returns vs
+                    standard FDs.</p>
+
+                <div class="aa-table-wrap" style="overflow-x: auto; margin-top: 24px;">
+                    <table class="aa-table" style="width: 100%; border-collapse: collapse; min-width: 600px;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--green-soft);">
+                                <th style="text-align: left; padding: 12px; font-size: 12px; color: var(--green-deep);">
+                                    Scheme Type</th>
+                                <th
+                                    style="text-align: center; padding: 12px; font-size: 12px; color: var(--green-deep);">
+                                    Expected Return</th>
+                                <th
+                                    style="text-align: center; padding: 12px; font-size: 12px; color: var(--green-deep);">
+                                    Desired Allocation %</th>
+                                <th
+                                    style="text-align: right; padding: 12px; font-size: 12px; color: var(--green-deep);">
+                                    Weighted Return</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Equity -->
+                            <tr style="background: rgba(160, 201, 105, 0.05);">
+                                <td style="padding: 12px; font-weight: 700; font-size: 13px;">Diversified Equity Funds
+                                </td>
+                                <td style="text-align: center;"><input type="number" id="aa-ret-1" value="15"
+                                        class="aa-mini-input"> %</td>
+                                <td style="text-align: center;"><input type="number" id="aa-alloc-1" value="15"
+                                        class="aa-mini-input" oninput="sumAA()"> %</td>
+                                <td style="text-align: right; font-weight: 800; color: var(--green-deep);" id="aa-w-1">
+                                    2.25%</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px; font-weight: 700; font-size: 13px;">Balance Funds / Hybrid
+                                </td>
+                                <td style="text-align: center;"><input type="number" id="aa-ret-2" value="12"
+                                        class="aa-mini-input"> %</td>
+                                <td style="text-align: center;"><input type="number" id="aa-alloc-2" value="15"
+                                        class="aa-mini-input" oninput="sumAA()"> %</td>
+                                <td style="text-align: right; font-weight: 800; color: var(--green-deep);" id="aa-w-2">
+                                    1.80%</td>
+                            </tr>
+                            <tr style="background: rgba(160, 201, 105, 0.05);">
+                                <td style="padding: 12px; font-weight: 700; font-size: 13px;">Dynamic PE Fund / BAF</td>
+                                <td style="text-align: center;"><input type="number" id="aa-ret-3" value="11"
+                                        class="aa-mini-input"> %</td>
+                                <td style="text-align: center;"><input type="number" id="aa-alloc-3" value="5"
+                                        class="aa-mini-input" oninput="sumAA()"> %</td>
+                                <td style="text-align: right; font-weight: 800; color: var(--green-deep);" id="aa-w-3">
+                                    0.55%</td>
+                            </tr>
+                            <!-- Debt -->
+                            <tr>
+                                <td style="padding: 12px; font-weight: 700; font-size: 13px;">Other Debt Funds</td>
+                                <td style="text-align: center;"><input type="number" id="aa-ret-4" value="9"
+                                        class="aa-mini-input"> %</td>
+                                <td style="text-align: center;"><input type="number" id="aa-alloc-4" value="45"
+                                        class="aa-mini-input" oninput="sumAA()"> %</td>
+                                <td style="text-align: right; font-weight: 800; color: var(--green-deep);" id="aa-w-4">
+                                    4.05%</td>
+                            </tr>
+                            <tr style="background: rgba(160, 201, 105, 0.05);">
+                                <td style="padding: 12px; font-weight: 700; font-size: 13px;">Monthly Income Plan</td>
+                                <td style="text-align: center;"><input type="number" id="aa-ret-5" value="10"
+                                        class="aa-mini-input"> %</td>
+                                <td style="text-align: center;"><input type="number" id="aa-alloc-5" value="20"
+                                        class="aa-mini-input" oninput="sumAA()"> %</td>
+                                <td style="text-align: right; font-weight: 800; color: var(--green-deep);" id="aa-w-5">
+                                    2.00%</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr
+                                style="border-top: 2px solid var(--green-deep); background: var(--green-deep); color: #fff;">
+                                <td style="padding: 12px; font-weight: 800;">Portfolio Totals</td>
+                                <td style="text-align: center;">—</td>
+                                <td style="text-align: center; font-weight: 800;" id="aa-alloc-total">100%</td>
+                                <td style="text-align: right; font-weight: 800;" id="aa-w-total">10.65%</td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                <div class="res-secondary">
-                    <div class="res-lbl">Standard FD (Post-Tax)</div>
-                    <div class="res-sec-val" id="res-fd-val">₹0</div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 40px;">
+                    <div class="input-group">
+                        <label class="input-label">Investible Amount (₹)</label>
+                        <input type="number" id="aa-principal" class="calc-field" value="1000000"
+                            style="padding-left:14px;">
+                    </div>
+                    <div class="input-group">
+                        <label class="input-label">Tenure (Years)</label>
+                        <input type="number" id="aa-yrs" class="calc-field" value="3" style="padding-left:14px;">
+                    </div>
                 </div>
-                <div class="res-card" style="background:rgba(160, 201, 105, 0.1); border:1px dashed var(--green-soft);">
-                    <div class="res-lbl" style="color:var(--green-deep);">Expected Wealth Alpha</div>
-                    <div class="res-val" id="res-alpha" style="color:var(--green-deep); font-size:24px;">+ ₹0</div>
+
+                <div class="wiz-nav">
+                    <div></div>
+                    <button class="btn-wiz-next" onclick="calculateAssetAllocation()">Compare vs. FD →</button>
                 </div>
+
+                <div id="aa-comparison" style="display: none; margin-top: 40px; animation: slideUpWiz 0.5s ease;">
+                    <h4 class="wiz-title" style="font-size: 24px;">Portfolio vs. 100% Fixed Deposits</h4>
+                    <p class="wiz-desc">See the "Wealth Alpha" created by your strategic allocation after taxes.</p>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                        <div class="res-card" style="background: var(--green-deep);">
+                            <div class="res-lbl">PF Strategy Value</div>
+                            <div class="res-val" id="res-pf-val">₹0</div>
+                            <div style="font-size: 11px; opacity: 0.8; margin-top: 8px;">Effective Return: <span
+                                    id="res-pf-ret">0%</span></div>
+                        </div>
+                        <div class="res-card" style="background: var(--white); border: 1px solid var(--border);">
+                            <div class="res-lbl" style="color: var(--text-2);">Standard FD Value (Post-Tax)</div>
+                            <div class="res-val" id="res-fd-val" style="color: var(--green-deep);">₹0</div>
+                            <div style="font-size: 11px; color: var(--text-3); margin-top: 8px;">Benchmark: 7.5% Pre-Tax
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="wiz-result-bar" style="background: gold; border: none; margin-top: 24px;">
+                        <span style="color: #000;">Wealth Creation Advantage (Alpha):</span>
+                        <strong id="res-alpha-val" style="color: #000; font-size: 28px;">₹0</strong>
+                    </div>
+                </div>
+
             </div>
         </div>
         </div>

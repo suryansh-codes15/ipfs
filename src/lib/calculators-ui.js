@@ -34,9 +34,59 @@ export function initCalculators() {
     window.wizCalcStep2 = wizCalcStep2;
     window.wizCalcStep3 = wizCalcStep3;
     window.wizCalcStep4 = wizCalcStep4;
+    window.sumAA = sumAA;
+    window.calculateAssetAllocation = calculateAssetAllocation;
 }
 
-// --- RETIREMENT WIZARD LOGIC ---
+// --- ASSET ALLOCATION (NEW LOGIC) ---
+
+function sumAA() {
+    let totalAlloc = 0;
+    let totalWeighted = 0;
+
+    for (let i = 1; i <= 5; i++) {
+        const ret = parseFloat(document.getElementById(`aa-ret-${i}`).value) || 0;
+        const alloc = parseFloat(document.getElementById(`aa-alloc-${i}`).value) || 0;
+        const weighted = (ret * alloc) / 100;
+
+        document.getElementById(`aa-w-${i}`).textContent = weighted.toFixed(2) + '%';
+        totalAlloc += alloc;
+        totalWeighted += weighted;
+    }
+
+    document.getElementById('aa-alloc-total').textContent = totalAlloc + '%';
+    document.getElementById('aa-w-total').textContent = totalWeighted.toFixed(2) + '%';
+    document.getElementById('aa-w-total').dataset.val = totalWeighted;
+
+    if (totalAlloc !== 100) {
+        document.getElementById('aa-alloc-total').style.color = '#ff6b6b';
+    } else {
+        document.getElementById('aa-alloc-total').style.color = '#fff';
+    }
+}
+
+function calculateAssetAllocation() {
+    const principal = parseFloat(document.getElementById('aa-principal').value) || 0;
+    const yrs = parseFloat(document.getElementById('aa-yrs').value) || 0;
+    const pfReturn = parseFloat(document.getElementById('aa-w-total').dataset.val || 10.65) / 100;
+
+    // Standard FD: 7.5% Pre-tax, 30% Tax rate
+    const fdReturnPostTax = 0.075 * (1 - 0.30);
+
+    const pfValue = principal * Math.pow(1 + pfReturn, yrs);
+    const fdValue = principal * Math.pow(1 + fdReturnPostTax, yrs);
+    const alpha = pfValue - fdValue;
+
+    document.getElementById('aa-comparison').style.display = 'block';
+    document.getElementById('res-pf-val').textContent = formatINR(pfValue);
+    document.getElementById('res-fd-val').textContent = formatINR(fdValue);
+    document.getElementById('res-pf-ret').textContent = (pfReturn * 100).toFixed(2) + '%';
+    document.getElementById('res-alpha-val').textContent = formatINR(alpha);
+
+    gsap.from('#aa-comparison', { opacity: 0, y: 30, duration: 0.8 });
+}
+
+// --- STANDARD CALCULATION SUITE ---
 
 function wizNext(currentStep) {
     if (currentStep === 1) {
