@@ -42,21 +42,35 @@ export function initCalculators() {
 
 function sumAA() {
     let totalAlloc = 0;
-    let totalWeighted = 0;
+    let totalWRet = 0;
+    let totalWDebt = 0;
+    let totalWEquity = 0;
 
     for (let i = 1; i <= 5; i++) {
-        const ret = parseFloat(document.getElementById(`aa-ret-${i}`).value) || 0;
         const alloc = parseFloat(document.getElementById(`aa-alloc-${i}`).value) || 0;
-        const weighted = (ret * alloc) / 100;
+        const ret = parseFloat(document.getElementById(`aa-ret-${i}`).value) || 0;
+        const dPct = parseFloat(document.getElementById(`aa-debt-${i}`).value) || 0;
+        const ePct = parseFloat(document.getElementById(`aa-equity-${i}`).value) || 0;
 
-        document.getElementById(`aa-w-${i}`).textContent = weighted.toFixed(2) + '%';
+        const wRet = (alloc / 100) * ret;
+        const wDebt = (alloc / 100) * dPct;
+        const wEquity = (alloc / 100) * ePct;
+
+        document.getElementById(`aa-w-${i}`).textContent = wRet.toFixed(2) + '%';
+        document.getElementById(`aa-wd-${i}`).textContent = wDebt.toFixed(2);
+        document.getElementById(`aa-we-${i}`).textContent = wEquity.toFixed(2);
+
         totalAlloc += alloc;
-        totalWeighted += weighted;
+        totalWRet += wRet;
+        totalWDebt += wDebt;
+        totalWEquity += wEquity;
     }
 
     document.getElementById('aa-alloc-total').textContent = totalAlloc + '%';
-    document.getElementById('aa-w-total').textContent = totalWeighted.toFixed(2) + '%';
-    document.getElementById('aa-w-total').dataset.val = totalWeighted;
+    document.getElementById('aa-w-total').textContent = totalWRet.toFixed(2) + '%';
+    document.getElementById('aa-w-total').dataset.val = totalWRet;
+    document.getElementById('aa-wd-total').textContent = totalWDebt.toFixed(2);
+    document.getElementById('aa-we-total').textContent = totalWEquity.toFixed(2);
 
     if (totalAlloc !== 100) {
         document.getElementById('aa-alloc-total').style.color = '#ff6b6b';
@@ -82,6 +96,10 @@ function calculateAssetAllocation() {
     document.getElementById('res-fd-val').textContent = formatINR(fdValue);
     document.getElementById('res-pf-ret').textContent = (pfReturn * 100).toFixed(2) + '%';
     document.getElementById('res-alpha-val').textContent = formatINR(alpha);
+
+    // Populate the Debt/Equity breakdown
+    document.getElementById('res-total-debt').textContent = document.getElementById('aa-wd-total').textContent + '%';
+    document.getElementById('res-total-equity').textContent = document.getElementById('aa-we-total').textContent + '%';
 
     gsap.from('#aa-comparison', { opacity: 0, y: 30, duration: 0.8 });
 }
