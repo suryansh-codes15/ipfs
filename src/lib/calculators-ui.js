@@ -4,6 +4,24 @@ import { Finance } from './finance-logic.js';
  * IPFS Calculators Suite UI Controller
  */
 
+// EXPOSE FUNCTIONS TO GLOBAL SCOPE
+window.initCalculators = initCalculators;
+window.sumAA = sumAA;
+window.calculateAssetAllocation = calculateAssetAllocation;
+window.wizNext = wizNext;
+window.wizBack = wizBack;
+window.wizReset = wizReset;
+window.wizCalcStep2 = wizCalcStep2;
+window.wizCalcStep3 = wizCalcStep3;
+window.wizCalcStep4 = wizCalcStep4;
+window.triggerCalculation = triggerCalculation;
+window.calculateGoal = calculateGoal;
+window.calculateRetirement = calculateRetirement;
+window.calculateBudget = calculateBudget;
+window.calculateAllocation = calculateAllocation;
+window.generateSummary = generateSummary;
+window.formatINR = formatINR;
+
 export function initCalculators() {
     const tabs = document.querySelectorAll('.calc-tab-btn');
     const panels = document.querySelectorAll('.calc-panel');
@@ -26,16 +44,6 @@ export function initCalculators() {
             triggerCalculation(type);
         });
     });
-
-    // EXPOSE WIZARD FUNCTIONS TO GLOBAL SCOPE
-    window.wizNext = wizNext;
-    window.wizBack = wizBack;
-    window.wizReset = wizReset;
-    window.wizCalcStep2 = wizCalcStep2;
-    window.wizCalcStep3 = wizCalcStep3;
-    window.wizCalcStep4 = wizCalcStep4;
-    window.sumAA = sumAA;
-    window.calculateAssetAllocation = calculateAssetAllocation;
 
     // Initialize all calculations
     setTimeout(() => {
