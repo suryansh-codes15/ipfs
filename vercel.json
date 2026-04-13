@@ -1,5 +1,10 @@
 {
     "cleanUrls": true,
+    "functions": {
+        "api/*.js": {
+            "runtime": "nodejs20.x"
+        }
+    },
     "redirects": [
         {
             "source": "/why us.html",

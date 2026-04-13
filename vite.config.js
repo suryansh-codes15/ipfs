@@ -16,7 +16,8 @@ export default defineConfig({
         'privacy-policy': resolve(__dirname, 'privacy-policy.html'),
         'disclosure': resolve(__dirname, 'disclosure.html'),
         'signal-report': resolve(__dirname, 'signal-report.html'),
-        'equity-report': resolve(__dirname, 'equity-report.html')
+        'equity-report': resolve(__dirname, 'equity-report.html'),
+        'assessment': resolve(__dirname, 'assessment.html')
       }
     }
   }
