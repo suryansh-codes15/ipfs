@@ -45,13 +45,10 @@ export function initCalculators() {
 
 function sumAA() {
     try {
-        const principal = 10000000; // Case base: 10 Crores
         let totalAlloc = 0;
         let totalWRet = 0;
         let totalWDebt = 0;
         let totalWEquity = 0;
-        let totalAmt = 0;
-        let totalRetAmt = 0;
 
         for (let i = 1; i <= 5; i++) {
             const allocEl = document.getElementById(`aa-alloc-${i}`);
@@ -70,35 +67,24 @@ function sumAA() {
             const wDebt = (alloc / 100) * dPct;
             const wEquity = (alloc / 100) * ePct;
 
-            const amt = principal * (alloc / 100);
-            const retAmt = amt * (ret / 100);
-
             const wRetEl = document.getElementById(`aa-w-${i}`);
             const wDebtEl = document.getElementById(`aa-wd-${i}`);
             const wEquityEl = document.getElementById(`aa-we-${i}`);
-            const amtEl = document.getElementById(`aa-amt-${i}`);
-            const retAmtEl = document.getElementById(`aa-ret-amt-${i}`);
 
             if (wRetEl) wRetEl.textContent = wRet.toFixed(2) + '%';
             if (wDebtEl) wDebtEl.textContent = wDebt.toFixed(2);
             if (wEquityEl) wEquityEl.textContent = wEquity.toFixed(2);
-            if (amtEl) amtEl.textContent = formatINR(amt);
-            if (retAmtEl) retAmtEl.textContent = formatINR(retAmt);
 
             totalAlloc += alloc;
             totalWRet += wRet;
             totalWDebt += wDebt;
             totalWEquity += wEquity;
-            totalAmt += amt;
-            totalRetAmt += retAmt;
         }
 
         const allocTotalEl = document.getElementById('aa-alloc-total');
         const wRetTotalEl = document.getElementById('aa-w-total');
         const wdTotalEl = document.getElementById('aa-wd-total');
         const weTotalEl = document.getElementById('aa-we-total');
-        const amtTotalEl = document.getElementById('aa-amt-total');
-        const retAmtTotalEl = document.getElementById('aa-ret-amt-total');
 
         if (allocTotalEl) {
             allocTotalEl.textContent = totalAlloc + '%';
@@ -110,8 +96,6 @@ function sumAA() {
         }
         if (wdTotalEl) wdTotalEl.textContent = totalWDebt.toFixed(2);
         if (weTotalEl) weTotalEl.textContent = totalWEquity.toFixed(2);
-        if (amtTotalEl) amtTotalEl.textContent = formatINR(totalAmt);
-        if (retAmtTotalEl) retAmtTotalEl.textContent = formatINR(totalRetAmt);
 
     } catch (e) {
         console.error('sumAA Error:', e);
@@ -122,14 +106,13 @@ function calculateAssetAllocation() {
     try {
         const totalWRetEl = document.getElementById('aa-w-total');
         const nameEl = document.getElementById('aa-name');
-
         if (!totalWRetEl) return;
 
-        const principal = 10000000; // Hardcoded to 10 Crores as per Excel model
-        const yrs = 3; // Hardcoded to 3 Years as per Excel model
-        const pfName = nameEl ? nameEl.value : 'Client';
+        const principal = 10000000;
+        const yrs = 3;
+        const pfName = nameEl && nameEl.value ? nameEl.value : 'Client';
 
-        // Update Summary Card
+        // 1. Update Summary Card
         const resNameEl = document.getElementById('res-aa-name');
         const resTargetEl = document.getElementById('res-aa-target');
         const resDebtEl = document.getElementById('res-aa-debt');
@@ -141,6 +124,74 @@ function calculateAssetAllocation() {
         if (resTargetEl) resTargetEl.textContent = totalWRetEl.textContent;
         if (resDebtEl && wdTotalEl) resDebtEl.textContent = wdTotalEl.textContent + '%';
         if (resEquityEl && weTotalEl) resEquityEl.textContent = weTotalEl.textContent + '%';
+
+        // 2. Populate "Today's Asset Allocation" Matrix (10 Columns)
+        const todayBody = document.getElementById('aa-today-body');
+        const todayFoot = document.getElementById('aa-today-foot');
+        let htmlToday = '';
+
+        const schemeNames = [
+            'Diversified Equity Funds',
+            'Balance Funds / Equity Hybrid Funds',
+            'Dynamic PE Fund of Funds / BAF',
+            'Debt Funds / Gold Funds',
+            'Monthly Income Plan / Conservative Hybrid'
+        ];
+
+        let tAlloc = 0, tWRet = 0, tWDebt = 0, tWEquity = 0, tAmt = 0, tRetAmt = 0;
+
+        for (let i = 1; i <= 5; i++) {
+            const alloc = parseFloat(document.getElementById(`aa-alloc-${i}`).value) || 0;
+            const ret = parseFloat(document.getElementById(`aa-ret-${i}`).value) || 0;
+            const dPct = parseFloat(document.getElementById(`aa-debt-${i}`).value) || 0;
+            const ePct = parseFloat(document.getElementById(`aa-equity-${i}`).value) || 0;
+
+            const wRet = (alloc / 100) * ret;
+            const wDebt = (alloc / 100) * dPct;
+            const wEquity = (alloc / 100) * ePct;
+            const amt = principal * (alloc / 100);
+            const retAmt = amt * (ret / 100);
+
+            tAlloc += alloc;
+            tWRet += wRet;
+            tWDebt += wDebt;
+            tWEquity += wEquity;
+            tAmt += amt;
+            tRetAmt += retAmt;
+
+            htmlToday += `
+                <tr>
+                    <td style="padding:10px; border-bottom:1px solid var(--border); font-weight:700;">${schemeNames[i - 1]}</td>
+                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${ret.toFixed(2)}%</td>
+                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${alloc.toFixed(2)}%</td>
+                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700;">${wRet.toFixed(2)}%</td>
+                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); border-left:1px solid var(--border);">${dPct}%</td>
+                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${ePct}%</td>
+                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${wDebt.toFixed(2)}</td>
+                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${wEquity.toFixed(2)}</td>
+                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">${formatINR(amt)}</td>
+                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">${formatINR(retAmt)}</td>
+                </tr>
+            `;
+        }
+
+        if (todayBody) todayBody.innerHTML = htmlToday;
+        if (todayFoot) {
+            todayFoot.innerHTML = `
+                <tr>
+                    <td style="padding:12px;">Today's Asset Allocation Total</td>
+                    <td style="text-align:right; padding:12px;">—</td>
+                    <td style="text-align:right; padding:12px;">${tAlloc.toFixed(2)}%</td>
+                    <td style="text-align:right; padding:12px;">${tWRet.toFixed(2)}%</td>
+                    <td style="text-align:right; padding:12px; border-left:1px solid rgba(255,255,255,0.2);">—</td>
+                    <td style="text-align:right; padding:12px;">—</td>
+                    <td style="text-align:right; padding:12px;">${tWDebt.toFixed(2)}</td>
+                    <td style="text-align:right; padding:12px;">${tWEquity.toFixed(2)}</td>
+                    <td style="text-align:right; padding:12px;">${formatINR(tAmt)}</td>
+                    <td style="text-align:right; padding:12px;">${formatINR(tRetAmt)}</td>
+                </tr>
+            `;
+        }
 
         // DETAILED TABLE CALCULATION
         const configs = [
