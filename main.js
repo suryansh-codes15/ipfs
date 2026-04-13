@@ -289,7 +289,12 @@ function countUp(id, target, suffix, prefix) {
     const ease = 1 - Math.pow(1 - progress, 4);
 
     s = target * ease;
-    el.textContent = (prefix || '') + (s >= 1000 ? Math.floor(s).toLocaleString('en-IN') : Math.floor(s)) + (suffix || '');
+    const isFloat = target % 1 !== 0;
+    const formattedVal = s >= 1000
+      ? Math.floor(s).toLocaleString('en-IN')
+      : (isFloat ? s.toFixed(2) : Math.floor(s));
+
+    el.textContent = (prefix || '') + formattedVal + (suffix || '');
 
     if (progress < 1) {
       requestAnimationFrame(update);
@@ -303,8 +308,8 @@ if (statsEl) {
   const statsObs = new IntersectionObserver(entries => {
     if (entries[0].isIntersecting) {
       countUp('s1', 26, '');
-      countUp('s2', 1200, '');
-      countUp('s3', 500, '');
+      countUp('s2', 595, '');
+      countUp('s3', 443.89, '');
       countUp('s4', 40, '');
       statsObs.disconnect();
     }
@@ -383,16 +388,16 @@ function setupJourneyModal() {
         }
       }, "-=1.5")
       .to({ val: 0 }, {
-        val: 500,
+        val: 443.89,
         duration: 2.2,
         ease: "power2.out",
         onUpdate: function () {
           const el = document.getElementById('mStat1');
-          if (el) el.textContent = Math.floor(this.targets()[0].val);
+          if (el) el.textContent = this.targets()[0].val.toFixed(2);
         }
       }, "-=1.5")
       .to({ val: 0 }, {
-        val: 1200,
+        val: 595,
         duration: 2.5,
         ease: "power2.out",
         onUpdate: function () {
