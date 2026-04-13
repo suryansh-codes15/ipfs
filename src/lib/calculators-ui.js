@@ -45,10 +45,13 @@ export function initCalculators() {
 
 function sumAA() {
     try {
+        const principal = 10000000; // Case base: 10 Crores
         let totalAlloc = 0;
         let totalWRet = 0;
         let totalWDebt = 0;
         let totalWEquity = 0;
+        let totalAmt = 0;
+        let totalRetAmt = 0;
 
         for (let i = 1; i <= 5; i++) {
             const allocEl = document.getElementById(`aa-alloc-${i}`);
@@ -67,24 +70,35 @@ function sumAA() {
             const wDebt = (alloc / 100) * dPct;
             const wEquity = (alloc / 100) * ePct;
 
+            const amt = principal * (alloc / 100);
+            const retAmt = amt * (ret / 100);
+
             const wRetEl = document.getElementById(`aa-w-${i}`);
             const wDebtEl = document.getElementById(`aa-wd-${i}`);
             const wEquityEl = document.getElementById(`aa-we-${i}`);
+            const amtEl = document.getElementById(`aa-amt-${i}`);
+            const retAmtEl = document.getElementById(`aa-ret-amt-${i}`);
 
             if (wRetEl) wRetEl.textContent = wRet.toFixed(2) + '%';
             if (wDebtEl) wDebtEl.textContent = wDebt.toFixed(2);
             if (wEquityEl) wEquityEl.textContent = wEquity.toFixed(2);
+            if (amtEl) amtEl.textContent = formatINR(amt);
+            if (retAmtEl) retAmtEl.textContent = formatINR(retAmt);
 
             totalAlloc += alloc;
             totalWRet += wRet;
             totalWDebt += wDebt;
             totalWEquity += wEquity;
+            totalAmt += amt;
+            totalRetAmt += retAmt;
         }
 
         const allocTotalEl = document.getElementById('aa-alloc-total');
         const wRetTotalEl = document.getElementById('aa-w-total');
         const wdTotalEl = document.getElementById('aa-wd-total');
         const weTotalEl = document.getElementById('aa-we-total');
+        const amtTotalEl = document.getElementById('aa-amt-total');
+        const retAmtTotalEl = document.getElementById('aa-ret-amt-total');
 
         if (allocTotalEl) {
             allocTotalEl.textContent = totalAlloc + '%';
@@ -96,6 +110,9 @@ function sumAA() {
         }
         if (wdTotalEl) wdTotalEl.textContent = totalWDebt.toFixed(2);
         if (weTotalEl) weTotalEl.textContent = totalWEquity.toFixed(2);
+        if (amtTotalEl) amtTotalEl.textContent = formatINR(totalAmt);
+        if (retAmtTotalEl) retAmtTotalEl.textContent = formatINR(totalRetAmt);
+
     } catch (e) {
         console.error('sumAA Error:', e);
     }
@@ -103,15 +120,13 @@ function sumAA() {
 
 function calculateAssetAllocation() {
     try {
-        const principalEl = document.getElementById('aa-principal');
-        const yrsEl = document.getElementById('aa-yrs');
         const totalWRetEl = document.getElementById('aa-w-total');
         const nameEl = document.getElementById('aa-name');
 
-        if (!principalEl || !yrsEl || !totalWRetEl) return;
+        if (!totalWRetEl) return;
 
-        const principal = parseFloat(principalEl.value) || 0;
-        const yrs = parseFloat(yrsEl.value) || 0;
+        const principal = 10000000; // Hardcoded to 10 Crores as per Excel model
+        const yrs = 3; // Hardcoded to 3 Years as per Excel model
         const pfName = nameEl ? nameEl.value : 'Client';
 
         // Update Summary Card
