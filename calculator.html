@@ -1247,38 +1247,154 @@
 
         <!-- 3. WEALTH GOAL -->
         <div class="calc-panel" id="wealth">
-            <div class="calc-inputs">
-                <h3 class="calc-title">Goal Architecture</h3>
-                <div class="input-group">
-                    <label class="input-label">Target Goal Amount</label>
-                    <div class="input-text-wrap"><span>₹</span><input type="number" id="goal-target" class="calc-field"
-                            value="5000000"></div>
-                </div>
-                <div class="input-group">
-                    <label class="input-label">Horizon (Years) <span class="label-val"
-                            id="goal-yrs-val">10</span></label>
-                    <input type="range" id="goal-yrs" min="1" max="40" value="10">
-                </div>
-                <div class="input-group">
-                    <label class="input-label">Expected ROI (%) <span class="label-val"
-                            id="goal-roi-val">12%</span></label>
-                    <input type="range" id="goal-roi" min="1" max="30" value="12">
-                </div>
-                <button class="btn-calculate" data-calc="wealth">Architect My Goal</button>
-            </div>
-            <div class="calc-results">
-                <div class="calc-loader" id="wealth-loader">
-                    <div class="loader-spinner"></div>
-                    <div class="loader-text">Architecting Wealth Path...</div>
-                </div>
-                <div class="res-content" id="wealth-content">
-                    <div class="res-card">
-                        <div class="res-lbl">Monthly SIP Needed</div>
-                        <div class="res-val" id="res-goal-sip">₹0</div>
+            <div class="calc-grid-3">
+                <!-- COLUMN 1: GENERAL INFORMATION -->
+                <div class="calc-column">
+                    <h3 class="calc-title" style="display:flex; align-items:center; gap:8px;">
+                        <i class="fas fa-info-circle"></i> General Information
+                    </h3>
+                    <div class="input-stack">
+                        <div class="input-group">
+                            <label class="input-label">Name of Client</label>
+                            <input type="text" id="wealth-client-name" class="calc-field" value="Mr. Vivek">
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div class="input-group">
+                                <label class="input-label">Present Age</label>
+                                <input type="number" id="wealth-age" class="calc-field" value="60">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Retirement Age</label>
+                                <input type="number" id="wealth-ret-age" class="calc-field" value="85">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Present Expense p.a (₹)</label>
+                            <input type="number" id="wealth-exp-pa" class="calc-field" value="5000000">
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div class="input-group">
+                                <label class="input-label">Exp. Inflation %</label>
+                                <input type="number" id="wealth-inflation" class="calc-field" value="6">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Life Expectancy</label>
+                                <input type="number" id="wealth-life" class="calc-field" value="90">
+                            </div>
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div class="input-group">
+                                <label class="input-label">Pre-Ret. ROI %</label>
+                                <input type="number" id="wealth-roi-pre" class="calc-field" value="16">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Post-Ret. ROI %</label>
+                                <input type="number" id="wealth-roi-post" class="calc-field" value="14">
+                            </div>
+                        </div>
                     </div>
-                    <div class="res-secondary">
-                        <div class="res-lbl">One-Time Lumpsum Needed</div>
-                        <div class="res-sec-val" id="res-goal-lump">₹0</div>
+                </div>
+
+                <!-- COLUMN 2: GOAL MATRIX -->
+                <div class="calc-column">
+                    <h3 class="calc-title"><i class="fas fa-bullseye"></i> Goal Architecture</h3>
+
+                    <!-- GOAL 1 -->
+                    <div class="goal-sub-panel"
+                        style="background: rgba(160, 201, 105, 0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(160, 201, 105, 0.1); margin-bottom: 20px;">
+                        <h4
+                            style="font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; color:var(--green-deep);">
+                            Primary Goal</h4>
+                        <div class="input-group">
+                            <label class="input-label">Goal Name (e.g. Alankrita Marriage)</label>
+                            <input type="text" id="goal1-name" class="calc-field" value="Goal 1">
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div class="input-group">
+                                <label class="input-label">Age at Goal</label>
+                                <input type="number" id="goal1-age" class="calc-field" value="25">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Target Year</label>
+                                <input type="number" id="goal1-target" class="calc-field" value="27">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Present Cost of Goal (₹)</label>
+                            <input type="number" id="goal1-cost" class="calc-field" value="10000000">
+                        </div>
+                    </div>
+
+                    <!-- GOAL 2 -->
+                    <div class="goal-sub-panel"
+                        style="background: rgba(160, 201, 105, 0.05); padding: 15px; border-radius: 12px; border: 1px solid rgba(160, 201, 105, 0.1);">
+                        <h4
+                            style="font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; color:var(--green-deep);">
+                            Secondary Goal</h4>
+                        <div class="input-group">
+                            <label class="input-label">Goal Name (e.g. Aakriti Education)</label>
+                            <input type="text" id="goal2-name" class="calc-field" value="Goal 2">
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div class="input-group">
+                                <label class="input-label">Age at Goal</label>
+                                <input type="number" id="goal2-age" class="calc-field" value="23">
+                            </div>
+                            <div class="input-group">
+                                <label class="input-label">Target Year</label>
+                                <input type="number" id="goal2-target" class="calc-field" value="27">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label class="input-label">Present Cost of Goal (₹)</label>
+                            <input type="number" id="goal2-cost" class="calc-field" value="10000000">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COLUMN 3: RESULTS & ANALYTICS -->
+                <div class="calc-column">
+                    <h3 class="calc-title"><i class="fas fa-chart-line"></i> Institutional Analytics</h3>
+                    <div class="analytics-board" style="display:flex; flex-direction:column; gap:20px;">
+
+                        <!-- COMPOUNDING TABLE -->
+                        <div class="res-mini-table">
+                            <table style="width:100%; font-size:11px; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid var(--gold-deep);">
+                                        <th style="text-align:left; padding:8px;">Frequency</th>
+                                        <th style="text-align:right; padding:8px;">Eff. ROI</th>
+                                        <th style="text-align:right; padding:8px;">Future Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="wealth-compounding-body">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- GOAL DECISIONS -->
+                        <div id="wealth-results-grid" style="display:grid; grid-template-columns:1fr; gap:15px;">
+                            <!-- Goal 1 Summary Card -->
+                            <div class="res-card-elite" id="res-goal1-card">
+                                <div class="card-head">Goal 1: Results</div>
+                                <div class="card-row"><span>Corpus Required</span><strong
+                                        id="res-goal1-corpus">₹0</strong></div>
+                                <div class="card-row"><span>Monthly Save</span><strong id="res-goal1-sip"
+                                        style="color:var(--gold-deep);">₹0</strong></div>
+                            </div>
+                            <!-- Goal 2 Summary Card -->
+                            <div class="res-card-elite" id="res-goal2-card">
+                                <div class="card-head">Goal 2: Results</div>
+                                <div class="card-row"><span>Corpus Required</span><strong
+                                        id="res-goal2-corpus">₹0</strong></div>
+                                <div class="card-row"><span>Monthly Save</span><strong id="res-goal2-sip"
+                                        style="color:var(--gold-deep);">₹0</strong></div>
+                            </div>
+                        </div>
+
+                        <button class="btn-elite" onclick="calculateWealthProjection()"
+                            style="width:100%; padding:15px; margin-top:10px;">Architect My Wealth Path</button>
                     </div>
                 </div>
             </div>

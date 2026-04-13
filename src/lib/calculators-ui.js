@@ -20,6 +20,7 @@ window.calculateRetirement = calculateRetirement;
 window.calculateBudget = calculateBudget;
 window.calculateAllocation = calculateAllocation;
 window.generateSummary = generateSummary;
+window.calculateWealthProjection = calculateWealthProjection;
 window.formatINR = formatINR;
 
 export function initCalculators() {
@@ -516,7 +517,91 @@ export function calculateAllocation() {
     updateResults('aa', { 'res-mf-val': mfValue, 'res-fd-val': fdValueFinal, 'res-alpha': alpha });
 }
 
+export function calculateWealthProjection() {
+    const getVal = (id) => parseFloat(document.getElementById(id)?.value || 0);
+    const getText = (id) => document.getElementById(id)?.value || '';
+
+    // General Info
+    const age = getVal('wealth-age');
+    const retAge = getVal('wealth-ret-age');
+    const expPa = getVal('wealth-exp-pa');
+    const inflation = getVal('wealth-inflation') / 100;
+    const lifeExp = getVal('wealth-life');
+    const roiPre = getVal('wealth-roi-pre') / 100;
+    const roiPost = getVal('wealth-roi-post') / 100;
+
+    // Compounding Frequency Analysis (using Goal 1 Target Year as reference if applicable)
+    const refTenure = getVal('goal1-target') || 10;
+    const principal = getVal('goal1-cost') || 1000000;
+
+    const compoundingModes = [
+        { name: 'Annual Compound (1)', freq: 1 },
+        { name: 'Compound Half Yrly (2)', freq: 2 },
+        { name: 'Compound Quarterly (3)', freq: 4 },
+        { name: 'Compound Monthly (4)', freq: 12 }
+    ];
+
+    let htmlCompounding = '';
+    compoundingModes.forEach(mode => {
+        // Effective Rate = (1 + r/n)^n - 1
+        const effRate = Math.pow(1 + (roiPre / mode.freq), mode.freq) - 1;
+
+        // Use monthly rate derived from effective rate for SIP calculation
+        // Monthly Rate j = (1 + effRate)^(1/12) - 1
+        const monthlyRate = Math.pow(1 + effRate, 1 / 12) - 1;
+        const totalMonths = refTenure * 12;
+
+        // FV SIP = P * [(1+j)^n - 1] / j * (1+j) // Assumes annuity due (start of month)
+        // Adjusting to match screenshot: 900k * [(1.01)^36 - 1] / 0.01 = 38,769,190 (Ordinary Annuity)
+        const fv = principal * (Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate;
+
+        htmlCompounding += `
+            <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding:10px; font-weight:500;">${mode.name}</td>
+                <td style="text-align:right; padding:10px;">${(effRate * 100).toFixed(2)}%</td>
+                <td style="text-align:right; padding:10px; font-weight:700; color:var(--green-deep);">${formatINR(fv)}</td>
+            </tr>
+        `;
+    });
+    const compBody = document.getElementById('wealth-compounding-body');
+    if (compBody) compBody.innerHTML = htmlCompounding;
+
+    // Goal Logic
+    const goals = [
+        { id: 1, prefix: 'goal1', resPrefix: 'res-goal1' },
+        { id: 2, prefix: 'goal2', resPrefix: 'res-goal2' }
+    ];
+
+    goals.forEach(goal => {
+        const name = getText(goal.prefix + '-name');
+        const tgtAge = getVal(goal.prefix + '-age');
+        const presentCost = getVal(goal.prefix + '-cost');
+        const yrsLeft = getVal(goal.prefix + '-target');
+
+        if (yrsLeft > 0) {
+            // Future Cost = Present Cost * (1 + inflation)^yrsLeft
+            const corpusRequired = presentCost * Math.pow(1 + inflation, yrsLeft);
+            // SIP = PMT(r/12, n*12, 0, -FV)
+            const sip = -Finance.PMT(roiPre / 12, yrsLeft * 12, 0, corpusRequired);
+
+            document.getElementById(goal.resPrefix + '-card').querySelector('.card-head').textContent = `${name || 'Goal ' + goal.id}: Results`;
+            document.getElementById(goal.resPrefix + '-corpus').textContent = formatINR(corpusRequired);
+            document.getElementById(goal.resPrefix + '-sip').textContent = formatINR(sip);
+        }
+    });
+
+    // Animate results
+    gsap.from('.res-card-elite', {
+        opacity: 0,
+        y: 20,
+        stagger: 0.2,
+        duration: 0.8,
+        ease: 'power3.out'
+    });
+}
+
 export function calculateGoal() {
+    // Legacy goal calculator now redirects to new projection or kept for single goal tab
     const getVal = (id) => parseFloat(document.getElementById(id)?.value || 0);
     const target = getVal('goal-target');
     const yrs = getVal('goal-yrs');
