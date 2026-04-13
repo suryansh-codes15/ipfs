@@ -168,35 +168,6 @@ const obs = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-// ── MOBILE MENU ──
-function setupMobileMenu() {
-  const menuToggle = document.querySelector('.menu-toggle');
-  const navLinks = document.querySelector('.nav-links');
-  if (!menuToggle || !navLinks) return;
-
-  // Use addEventListener instead of onclick to avoid overrides
-  menuToggle.addEventListener('click', (e) => {
-    e.preventDefault();
-    menuToggle.classList.toggle('active');
-    navLinks.classList.toggle('active');
-  });
-
-  // Close menu on link click
-  navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      menuToggle.classList.remove('active');
-      navLinks.classList.remove('active');
-    });
-  });
-}
-
-// Initial call in case script is loaded after DOMContentLoaded
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', setupMobileMenu);
-} else {
-  setupMobileMenu();
-}
-
 // ── PARALLAX (shapes + blobs) ──
 if (window.innerWidth > 768) {
   document.addEventListener('mousemove', e => {
