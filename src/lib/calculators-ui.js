@@ -108,8 +108,11 @@ function calculateAssetAllocation() {
         const nameEl = document.getElementById('aa-name');
         if (!totalWRetEl) return;
 
-        const principal = 10000000;
-        const yrs = 3;
+        const principalEl = document.getElementById('aa-principal');
+        const tenureEl = document.getElementById('aa-tenure');
+
+        const principal = principalEl ? (parseFloat(principalEl.value) || 10000000) : 10000000;
+        const yrs = tenureEl ? (parseFloat(tenureEl.value) || 3) : 3;
         const pfName = nameEl && nameEl.value ? nameEl.value : 'Client';
 
         // 1. Update Summary Card

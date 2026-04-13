@@ -1142,6 +1142,24 @@
                         </div>
                     </div>
 
+                    <!-- DYNAMIC INPUTS FOR RESULTS -->
+                    <div
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 40px; padding: 20px; background: rgba(160, 201, 105, 0.05); border-radius: 12px; border: 1px dashed var(--green-deep);">
+                        <div class="input-group" style="margin-bottom:0;">
+                            <label class="input-label" style="font-size: 11px;">Amount Invested (Lumpsum)</label>
+                            <div class="input-text-wrap">
+                                <span>₹</span>
+                                <input type="number" id="aa-principal" class="calc-field" value="10000000"
+                                    oninput="calculateAssetAllocation()">
+                            </div>
+                        </div>
+                        <div class="input-group" style="margin-bottom:0;">
+                            <label class="input-label" style="font-size: 11px;">Tenure (Years)</label>
+                            <input type="number" id="aa-tenure" class="calc-field" value="3"
+                                oninput="calculateAssetAllocation()">
+                        </div>
+                    </div>
+
                     <!-- TODAY'S ASSET ALLOCATION (10 COLUMNS) -->
                     <div style="margin-bottom: 40px;">
                         <h4 class="wiz-title" style="font-size: 18px; margin-top: 40px;">Today's Asset Allocation</h4>
