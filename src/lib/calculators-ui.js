@@ -104,31 +104,15 @@ function sumAA() {
 
 function calculateAssetAllocation() {
     try {
-        const totalWRetEl = document.getElementById('aa-w-total');
         const nameEl = document.getElementById('aa-name');
-        if (!totalWRetEl) return;
-
         const principalEl = document.getElementById('aa-principal');
-        const tenureEl = document.getElementById('aa-tenure');
+        if (!principalEl) return;
 
-        const principal = principalEl ? (parseFloat(principalEl.value) || 10000000) : 10000000;
-        const yrs = tenureEl ? (parseFloat(tenureEl.value) || 3) : 3;
+        const principal = parseFloat(principalEl.value) || 10000000;
+        const yrs = 3; // Institutional Standard for comparison
         const pfName = nameEl && nameEl.value ? nameEl.value : 'Client';
 
-        // 1. Update Summary Card
-        const resNameEl = document.getElementById('res-aa-name');
-        const resTargetEl = document.getElementById('res-aa-target');
-        const resDebtEl = document.getElementById('res-aa-debt');
-        const resEquityEl = document.getElementById('res-aa-equity');
-        const wdTotalEl = document.getElementById('aa-wd-total');
-        const weTotalEl = document.getElementById('aa-we-total');
-
-        if (resNameEl) resNameEl.textContent = pfName;
-        if (resTargetEl) resTargetEl.textContent = totalWRetEl.textContent;
-        if (resDebtEl && wdTotalEl) resDebtEl.textContent = wdTotalEl.textContent + '%';
-        if (resEquityEl && weTotalEl) resEquityEl.textContent = weTotalEl.textContent + '%';
-
-        // 2. Populate "Today's Asset Allocation" Matrix (10 Columns)
+        // 1. Populate "Today's Asset Allocation" Matrix (10 Columns)
         const todayBody = document.getElementById('aa-today-body');
         const todayFoot = document.getElementById('aa-today-foot');
         let htmlToday = '';
@@ -168,10 +152,10 @@ function calculateAssetAllocation() {
                     <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${ret.toFixed(2)}%</td>
                     <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${alloc.toFixed(2)}%</td>
                     <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700;">${wRet.toFixed(2)}%</td>
-                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); border-left:1px solid var(--border);">${dPct}%</td>
-                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${ePct}%</td>
-                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${wDebt.toFixed(2)}</td>
-                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${wEquity.toFixed(2)}</td>
+                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); border-left:1px solid var(--border); text-align:center;">${dPct}</td>
+                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); text-align:center;">${ePct}</td>
+                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">${wDebt.toFixed(2)}</td>
+                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">${wEquity.toFixed(2)}</td>
                     <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">${formatINR(amt)}</td>
                     <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">${formatINR(retAmt)}</td>
                 </tr>
@@ -183,20 +167,31 @@ function calculateAssetAllocation() {
             todayFoot.innerHTML = `
                 <tr>
                     <td style="padding:12px;">Today's Asset Allocation Total</td>
-                    <td style="text-align:right; padding:12px;">—</td>
-                    <td style="text-align:right; padding:12px;">${tAlloc.toFixed(2)}%</td>
-                    <td style="text-align:right; padding:12px;">${tWRet.toFixed(2)}%</td>
-                    <td style="text-align:right; padding:12px; border-left:1px solid rgba(255,255,255,0.2);">—</td>
-                    <td style="text-align:right; padding:12px;">—</td>
-                    <td style="text-align:right; padding:12px;">${tWDebt.toFixed(2)}</td>
-                    <td style="text-align:right; padding:12px;">${tWEquity.toFixed(2)}</td>
-                    <td style="text-align:right; padding:12px;">${formatINR(tAmt)}</td>
-                    <td style="text-align:right; padding:12px;">${formatINR(tRetAmt)}</td>
+                    <td style="text-align:right; padding: 12px;">—</td>
+                    <td style="text-align:right; padding: 12px;">${tAlloc.toFixed(2)}%</td>
+                    <td style="text-align:right; padding: 12px;">—</td>
+                    <td style="text-align:right; padding: 12px; border-left: 1px solid rgba(255,255,255,0.2);">—</td>
+                    <td style="text-align:right; padding: 12px;">—</td>
+                    <td style="text-align:right; padding: 12px;">${tWDebt.toFixed(2)}</td>
+                    <td style="text-align:right; padding: 12px;">${tWEquity.toFixed(2)}</td>
+                    <td style="text-align:right; padding: 12px;">${formatINR(tAmt)}</td>
+                    <td style="text-align:right; padding: 12px;">${formatINR(tRetAmt)}</td>
                 </tr>
             `;
         }
 
-        // DETAILED TABLE CALCULATION
+        // 2. Update Summary Cards
+        const resNameEl = document.getElementById('res-aa-name');
+        const resTargetEl = document.getElementById('res-aa-target');
+        const resDebtEl = document.getElementById('res-aa-debt');
+        const resEquityEl = document.getElementById('res-aa-equity');
+
+        if (resNameEl) resNameEl.textContent = pfName;
+        if (resTargetEl) resTargetEl.textContent = tWRet.toFixed(2) + '%';
+        if (resDebtEl) resDebtEl.textContent = tWDebt.toFixed(2) + '%';
+        if (resEquityEl) resEquityEl.textContent = tWEquity.toFixed(2) + '%';
+
+        // 3. DETAILED TABLE CALCULATION (BASE CASE SCENARIO)
         const configs = [
             { id: 1, name: 'Equity Funds', tax: 0 / 100, liq: 'No Lock In' },
             { id: 2, name: 'Balance Funds', tax: 0 / 100, liq: 'No Lock In' },
