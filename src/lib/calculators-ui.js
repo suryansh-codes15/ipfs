@@ -102,7 +102,7 @@ function sumAA() {
     }
 }
 
-function calculateAssetAllocation() {
+function calculateAssetAllocation(skipToday = false) {
     try {
         const nameEl = document.getElementById('aa-name');
         const principalEl = document.getElementById('aa-principal');
@@ -125,7 +125,7 @@ function calculateAssetAllocation() {
             'Monthly Income Plan / Conservative Hybrid'
         ];
 
-        let tAlloc = 0, tWRet = 0, tWDebt = 0, tWEquity = 0, tAmt = 0, tRetAmt = 0;
+        let tAlloc = 0, tWRet = 0, tDebtAmt = 0, tEquityAmt = 0, tAmt = 0, tRetAmt = 0;
 
         for (let i = 1; i <= 5; i++) {
             const alloc = parseFloat(document.getElementById(`aa-alloc-${i}`).value) || 0;
@@ -134,35 +134,45 @@ function calculateAssetAllocation() {
             const ePct = parseFloat(document.getElementById(`aa-equity-${i}`).value) || 0;
 
             const wRet = (alloc / 100) * ret;
-            const wDebt = (alloc / 100) * dPct;
-            const wEquity = (alloc / 100) * ePct;
-            const amt = principal * (alloc / 100);
+
+            let amt = principal * (alloc / 100);
+            if (skipToday) {
+                const manualAmt = document.getElementById(`aa-row-amt-${i}`);
+                if (manualAmt) amt = parseFloat(manualAmt.value) || 0;
+            }
             const retAmt = amt * (ret / 100);
 
             tAlloc += alloc;
-            tWRet += wRet;
-            tWDebt += wDebt;
-            tWEquity += wEquity;
             tAmt += amt;
             tRetAmt += retAmt;
+            tDebtAmt += amt * (dPct / 100);
+            tEquityAmt += amt * (ePct / 100);
+            tWRet += (amt / principal) * ret;
 
-            htmlToday += `
-                <tr>
-                    <td style="padding:10px; border-bottom:1px solid var(--border); font-weight:700;">${schemeNames[i - 1]}</td>
-                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${ret.toFixed(2)}%</td>
-                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${alloc.toFixed(2)}%</td>
-                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700;">${wRet.toFixed(2)}%</td>
-                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); border-left:1px solid var(--border); text-align:center;">${dPct}</td>
-                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); text-align:center;">${ePct}</td>
-                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">${wDebt.toFixed(2)}</td>
-                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">${wEquity.toFixed(2)}</td>
-                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">${formatINR(amt)}</td>
-                    <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">${formatINR(retAmt)}</td>
-                </tr>
-            `;
+            if (!skipToday) {
+                htmlToday += `
+                    <tr>
+                        <td style="padding:10px; border-bottom:1px solid var(--border); font-weight:700;">${schemeNames[i - 1]}</td>
+                        <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${ret.toFixed(2)}%</td>
+                        <td id="aa-today-alloc-${i}" style="text-align:right; padding:10px; border-bottom:1px solid var(--border);">${alloc.toFixed(2)}%</td>
+                        <td id="aa-today-wret-${i}" style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700;">${wRet.toFixed(2)}%</td>
+                        <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); border-left:1px solid var(--border); text-align:center;">${dPct}</td>
+                        <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); text-align:center;">${ePct}</td>
+                        <td id="aa-today-wd-${i}" style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">${wDebt.toFixed(2)}</td>
+                        <td id="aa-today-we-${i}" style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">${wEquity.toFixed(2)}</td>
+                        <td style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">
+                            <input type="number" id="aa-row-amt-${i}" value="${amt.toFixed(0)}" oninput="updateRowFromAmt(${i})" style="width: 100px; text-align: right; background: rgba(160, 201, 105, 0.05); border: 1px solid rgba(160, 201, 105, 0.2); border-radius: 4px; font-weight: 800; color: var(--green-deep); padding: 2px 5px;">
+                        </td>
+                        <td id="aa-row-ret-amt-${i}" style="text-align:right; padding:10px; border-bottom:1px solid var(--border); font-weight:700; color:var(--green-deep);">${formatINR(retAmt)}</td>
+                    </tr>
+                `;
+            } else {
+                const rowRetEl = document.getElementById(`aa-row-ret-amt-${i}`);
+                if (rowRetEl) rowRetEl.textContent = formatINR(retAmt);
+            }
         }
 
-        if (todayBody) todayBody.innerHTML = htmlToday;
+        if (!skipToday && todayBody) todayBody.innerHTML = htmlToday;
         if (todayFoot) {
             todayFoot.innerHTML = `
                 <tr>
@@ -283,6 +293,29 @@ function calculateAssetAllocation() {
         console.error('calculateAssetAllocation Error:', e);
     }
 }
+
+window.updateRowFromAmt = function (i) {
+    let total = 0;
+    for (let j = 1; j <= 5; j++) {
+        const amtEl = document.getElementById(`aa-row-amt-${j}`);
+        total += amtEl ? (parseFloat(amtEl.value) || 0) : 0;
+    }
+
+    // Update global principal input
+    const principalEl = document.getElementById('aa-principal');
+    if (principalEl) principalEl.value = total;
+
+    // Recalculate specific row's returns
+    const rowAmtEl = document.getElementById(`aa-row-amt-${i}`);
+    const rowAmt = rowAmtEl ? (parseFloat(rowAmtEl.value) || 0) : 0;
+    const retPct = parseFloat(document.getElementById(`aa-ret-${i}`).value) || 0;
+    const retAmt = rowAmt * (retPct / 100);
+    const rowRetEl = document.getElementById(`aa-row-ret-amt-${i}`);
+    if (rowRetEl) rowRetEl.textContent = formatINR(retAmt);
+
+    // Call calculation to update Base Case Scenario table (skipping table re-render)
+    calculateAssetAllocation(true);
+};
 
 // --- STANDARD CALCULATION SUITE ---
 
