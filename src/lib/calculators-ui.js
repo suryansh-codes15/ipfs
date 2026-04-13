@@ -38,6 +38,17 @@ export function initCalculators() {
         });
     });
 
+    // HANDLE URL PARAMETERS FOR DEEP LINKING
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialTab = urlParams.get('tab');
+    if (initialTab) {
+        const targetTab = Array.from(tabs).find(t => t.dataset.target === initialTab);
+        if (targetTab) {
+            targetTab.click();
+        }
+    }
+
+
     // ATTACH CALCULATION TRIGGER TO BUTTONS
     document.querySelectorAll('.btn-calculate').forEach(btn => {
         btn.addEventListener('click', () => {

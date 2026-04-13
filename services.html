@@ -294,14 +294,22 @@
 
             <!-- Mobile Only Actions -->
             <div class="nav-actions mobile-only">
-                <a href="assessment.html" class="btn-elite btn-form">Assessment Form</a>
+                <a href="https://play.google.com/store/apps/details?id=com.investandprosperfinancial.mobile.app"
+                    target="_blank" class="nav-playstore">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                        alt="Get it on Google Play">
+                </a>
                 <a href="https://ipfs.investwell.app/app/#/login" target="_blank" class="btn-elite">Portfolio Login</a>
             </div>
         </div>
 
         <!-- Desktop Only Actions -->
         <div class="nav-actions desktop-only">
-            <a href="assessment.html" class="btn-elite btn-form">Assessment Form</a>
+            <a href="https://play.google.com/store/apps/details?id=com.investandprosperfinancial.mobile.app"
+                target="_blank" class="nav-playstore">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
+                    alt="Get it on Google Play">
+            </a>
             <a href="https://ipfs.investwell.app/app/#/login" target="_blank" class="btn-elite">Portfolio Login</a>
         </div>
 
@@ -329,6 +337,7 @@
                 <h3>Budgeting</h3>
                 <p>Through the combination of our vast experience, principles of data science and investment, we
                     architect your daily wealth flow.</p>
+                <a href="calculator.html?tab=budget" class="btn-try-out">Try Budgeting Tool →</a>
             </div>
             <!-- Service 2 -->
             <div class="service-card-elite reveal d1">
@@ -337,6 +346,7 @@
                 <h3>Education</h3>
                 <p>Strategic funding models designed to ensure your children's educational aspirations are met without
                     financial compromise.</p>
+                <a href="calculator.html?tab=wealth" class="btn-try-out">Try Goal Planner →</a>
             </div>
             <!-- Service 3 -->
             <div class="service-card-elite reveal d2">
@@ -345,6 +355,7 @@
                 <h3>Wealth Creation</h3>
                 <p>Harnessing market telemetry and elite asset selection to build enduring, generational wealth for
                     high-net-worth families.</p>
+                <a href="calculator.html?tab=wealth" class="btn-try-out">View Growth Map →</a>
             </div>
             <!-- Service 4 -->
             <div class="service-card-elite reveal">
@@ -353,6 +364,7 @@
                 <h3>Retirement</h3>
                 <p>Ensuring financial sovereignty in your senior years with high-precision cashflow engineering and
                     tax-optimized distributions.</p>
+                <a href="calculator.html?tab=retirement" class="btn-try-out">Check Retirement Corpus →</a>
             </div>
             <!-- Service 5 -->
             <div class="service-card-elite reveal d1">
@@ -361,6 +373,7 @@
                 <h3>Risk Management</h3>
                 <p>Risk and return are two sides of the same coin. We help you understand the tradeoffs and protect your
                     legacy from volatility.</p>
+                <a href="calculator.html?tab=allocation" class="btn-try-out">Compare Asset Risk →</a>
             </div>
             <!-- Service 6 -->
             <div class="service-card-elite reveal d2">
@@ -369,8 +382,18 @@
                 <h3>Emergency</h3>
                 <p>Preparing you for the inevitable unexpected. We help you maintain liquidity and stability when it
                     matters most.</p>
+                <a href="calculator.html?tab=budget" class="btn-try-out">Calculate Emergency Fund →</a>
             </div>
         </div>
+
+        <!-- NEW ASSESSMENT SECTION -->
+        <section class="assessment-banner reveal">
+            <h2>Ready for an Elite Financial Review?</h2>
+            <p>Our comprehensive assessment evaluates your risk profile, current holdings, and future aspirations to
+                build a bespoke wealth architecture.</p>
+            <a href="assessment.html" class="btn-primary-hero"
+                style="background:var(--gold); color:var(--green-deep); border:none;">Start Assessment Form →</a>
+        </section>
 
 
         <section class="curious-section reveal">
@@ -434,11 +457,7 @@
         </div>
     </footer>
 
-    <a href="https://play.google.com/store/apps/details?id=com.investandprosperfinancial.mobile.app" target="_blank"
-        class="fab-playstore">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg"
-            alt="Get it on Google Play" style="height:45px;">
-    </a>
+    <button class="scroll-top" id="stBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="./navbar.js"></script>
     <script type="module" src="./main.js"></script>
