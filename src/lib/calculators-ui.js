@@ -279,7 +279,7 @@ function calculateAssetAllocation(skipToday = false) {
             { label: 'Tax Rate (Approx)', vals: rowsData.map(r => (r.profit > 0 ? (r.taxAmt / r.profit * 100).toFixed(1) : '0') + '%'), total: (totalReturns > 0 ? (totalTaxAmt / totalReturns * 100).toFixed(2) : '0') + '%', fd: (fdTax * 100).toFixed(1) + '%' },
             { label: 'Tax Payment Amount', vals: rowsData.map(r => formatINR(r.taxAmt)), total: formatINR(totalTaxAmt), fd: formatINR(fdTaxAmt) },
             { label: 'Net Returns (Post-Tax)', vals: rowsData.map(r => formatINR(r.netRet)), total: formatINR(totalNetRet), fd: formatINR(fdNetRet) },
-            { label: 'CAGR (Post-Tax)', vals: rowsData.map(r => (r.amt > 0 ? (Math.pow(r.finalFV / r.amt, 1 / yrs) - 1) * 100 : 0).toFixed(2) + '%'), total: ((Math.pow(totalFinalFV / principal, 1 / yrs) - 1) * 100).toFixed(2) + '%', fd: (fdCAGR * (1 - fdTax)).toFixed(2) + '%' },
+            { label: 'CAGR (Post-Tax)', vals: rowsData.map(r => (r.amt > 0 ? (Math.pow(r.finalFV / r.amt, 1 / yrs) - 1) * 100 : 0).toFixed(2) + '%'), total: ((Math.pow(totalFinalFV / principal, 1 / yrs) - 1) * 100).toFixed(2) + '%', fd: ((Math.pow(fdFinalFV / principal, 1 / yrs) - 1) * 100).toFixed(2) + '%' },
             { label: 'Final Corpus (' + yrs + ' Years)', vals: rowsData.map(r => formatINR(r.finalFV)), total: formatINR(totalFinalFV), fd: formatINR(fdFinalFV), highlight: true }
         ];
 
@@ -424,14 +424,17 @@ function wizCalcStep3() {
     const annuity = parseFloat(document.getElementById('wiz-future-exp-val').dataset.raw || 0);
     const lifePost = parseFloat(document.getElementById('wiz-post-years').value) || 0;
     const roiPost = parseFloat(document.getElementById('wiz-roi-post').value) / 100 || 0;
+    const inflation = parseFloat(document.getElementById('wiz-inflation').value) / 100 || 0;
 
-    // Use monthly PVA formula: PV = PMT * [(1 - (1+r)^-n) / r]
-    const monthlyRate = roiPost / 12;
+    // Use Real Rate of Return (r = (1+i)/(1+infl) - 1) to account for increasing expenses during retirement
+    const realRateAnnual = ((1 + roiPost) / (1 + inflation)) - 1;
+    const monthlyRate = realRateAnnual / 12;
     const months = lifePost * 12;
 
     let corpus = 0;
-    if (monthlyRate > 0) {
-        corpus = annuity * ((1 - Math.pow(1 + monthlyRate, -months)) / monthlyRate);
+    if (monthlyRate !== 0) {
+        // PV of Annuity Due (Payments at start of month): PV = PMT * [(1 - (1+r)^-n) / r] * (1+r)
+        corpus = annuity * ((1 - Math.pow(1 + monthlyRate, -months)) / monthlyRate) * (1 + monthlyRate);
     } else {
         corpus = annuity * months;
     }
@@ -522,8 +525,20 @@ export function calculateAllocation() {
     const debtW = getVal('aa-debt-w') / 100;
     const eqReturn = 0.15, debtReturn = 0.08, fdReturn = 0.07, taxRate = 0.30;
     const portfolioReturn = (eqW * eqReturn) + (debtW * debtReturn);
-    const mfValue = amount * Math.pow(1 + portfolioReturn, tenure);
-    const fdValueFinal = amount * Math.pow(1 + fdReturn * (1 - taxRate), tenure);
+
+    // MF Calculation (Annual Compounding)
+    const mfValuePreTax = amount * Math.pow(1 + portfolioReturn, tenure);
+    const mfProfit = mfValuePreTax - amount;
+    // MF Tax: 12.5% on gains > 1.25L
+    const mfTax = Math.max(0, (mfProfit - 125000) * 0.125);
+    const mfValue = mfValuePreTax - mfTax;
+
+    // FD Calculation (Annual Compounding, 30% Tax)
+    const fdValuePreTax = amount * Math.pow(1 + fdReturn, tenure);
+    const fdProfit = fdValuePreTax - amount;
+    const fdTax = fdProfit * 0.30;
+    const fdValueFinal = fdValuePreTax - fdTax;
+
     const alpha = mfValue - fdValueFinal;
     updateResults('aa', { 'res-mf-val': mfValue, 'res-fd-val': fdValueFinal, 'res-alpha': alpha });
 }
@@ -564,11 +579,11 @@ export function calculateWealthProjection() {
     // 1. Future Expense p.a at Retirement
     const fvExpPa = expPa * Math.pow(1 + inflation, yrsToRet);
 
-    // 2. Corpus Required at Retirement (Inflation adjusted Annuity)
+    // 2. Corpus Required at Retirement (Inflation adjusted Annuity Due - Payments at START of month)
     const realRate = (1 + roiPost) / (1 + inflation) - 1;
     let corpusRequiredRet = 0;
     if (realRate !== 0) {
-        corpusRequiredRet = fvExpPa * (1 - Math.pow(1 + realRate, -yrsInRet)) / realRate;
+        corpusRequiredRet = fvExpPa * ((1 - Math.pow(1 + realRate, -yrsInRet)) / realRate) * (1 + realRate);
     } else {
         corpusRequiredRet = fvExpPa * yrsInRet;
     }
