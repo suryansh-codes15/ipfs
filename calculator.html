@@ -1114,6 +1114,16 @@
                         <input type="text" id="aa-name" class="calc-field" placeholder="Enter Investor Name"
                             style="padding-left:14px;">
                     </div>
+                    <div class="input-group">
+                        <label class="input-label">FD Interest Rate (%)</label>
+                        <select id="aa-fd-rate" class="calc-field" style="padding-left:10px;">
+                            <option value="5">5%</option>
+                            <option value="6">6%</option>
+                            <option value="7" selected>7%</option>
+                            <option value="7.5">7.5%</option>
+                            <option value="8">8%</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="wiz-nav">
@@ -1389,6 +1399,14 @@
                                 <div class="card-row"><span>Corpus Required</span><strong
                                         id="res-goal2-corpus">₹0</strong></div>
                                 <div class="card-row"><span>Monthly Save</span><strong id="res-goal2-sip"
+                                        style="color:var(--gold-deep);">₹0</strong></div>
+                            </div>
+                            <!-- Retirement Summary Card -->
+                            <div class="res-card-elite" id="res-ret-card">
+                                <div class="card-head">Retirement: Results</div>
+                                <div class="card-row"><span>Corpus Required</span><strong
+                                        id="res-ret-corpus">₹0</strong></div>
+                                <div class="card-row"><span>Monthly Save</span><strong id="res-ret-sip"
                                         style="color:var(--gold-deep);">₹0</strong></div>
                             </div>
                         </div>

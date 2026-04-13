@@ -224,7 +224,21 @@ function calculateAssetAllocation(skipToday = false) {
             { id: 3, name: 'ST Debt Fund', tax: 0.50 / 100, liq: 'No Lock In' } // Map Matrix Row 3 to ST Debt
         ];
 
-        let totalAlloc = 0, totalInvested = 0, totalReturns = 0, totalFV = 0, totalTaxAmt = 0, totalNetRet = 0, totalFinalFV = 0;
+        // FD Calculation from UI selector
+        const fdRateSelector = document.getElementById('aa-fd-rate');
+        const fdCAGR = fdRateSelector ? parseFloat(fdRateSelector.value) : 7.0;
+        const fdTax = 30.0 / 100; // Standard 30% slab
+
+        const fdFVPreTax = principal * Math.pow(1 + (fdCAGR / 100), yrs);
+        const fdProfit = fdFVPreTax - principal;
+        const fdTaxAmt = fdProfit * fdTax;
+        const fdNetRet = fdProfit - fdTaxAmt;
+        const fdFinalFV = principal + fdNetRet;
+
+        // Build Table rows with Post-Tax logic for MF
+        // MF Tax: 12.5% on gains exceeding 1.25L (Institutional Standard)
+        const mfTaxRate = 0.125;
+        const mfExemption = 125000;
 
         const rowsData = configs.map(cfg => {
             const alloc = parseFloat(document.getElementById('aa-alloc-' + cfg.id).value) || 0;
@@ -233,7 +247,13 @@ function calculateAssetAllocation(skipToday = false) {
             const amt = principal * (alloc / 100);
             const fv = amt * Math.pow(1 + (ret / 100), yrs);
             const profit = fv - amt;
-            const taxAmt = profit * cfg.tax;
+
+            // Tax: 12.5% on portion of profit proportionally exceeding exemption
+            // (Simulated as global exemption allocated to portfolio for comparison)
+            const shareOfExemption = (amt / principal) * mfExemption;
+            const taxableProfit = Math.max(0, profit - shareOfExemption);
+            const taxAmt = taxableProfit * mfTaxRate;
+
             const netRet = profit - taxAmt;
             const finalFV = amt + netRet;
 
@@ -248,28 +268,19 @@ function calculateAssetAllocation(skipToday = false) {
             return { ...cfg, alloc, ret, amt, fv, profit, taxAmt, netRet, finalFV };
         });
 
-        // FD Calculation
-        const fdTax = 30.60 / 100;
-        const fdCAGR = 7.50; // Pre-tax
-        const fdFVPreTax = principal * Math.pow(1 + (fdCAGR / 100), yrs);
-        const fdProfit = fdFVPreTax - principal;
-        const fdTaxAmt = fdProfit * fdTax;
-        const fdNetRet = fdProfit - fdTaxAmt;
-        const fdFinalFV = principal + fdNetRet;
-
         // Build Table rows
         const tableRows = [
             { label: 'Liquidity', vals: rowsData.map(r => r.liq), total: 'Atleast 70%', fd: 'Locked for 3 yrs' },
             { label: 'Investment Allocation', vals: rowsData.map(r => r.alloc.toFixed(1) + '%'), total: totalAlloc.toFixed(1) + '%', fd: '100.0%' },
             { label: 'Amount Invested', vals: rowsData.map(r => formatINR(r.amt)), total: formatINR(totalInvested), fd: formatINR(principal) },
             { label: 'Tenure ( Years )', vals: rowsData.map(r => yrs), total: yrs, fd: yrs },
-            { label: 'CAGR', vals: rowsData.map(r => r.ret.toFixed(1) + '%'), total: ((totalFinalFV / principal - 1) / yrs * 100).toFixed(1) + '%', fd: fdCAGR.toFixed(1) + '%' },
-            { label: 'Returns Amount for ' + yrs + ' years', vals: rowsData.map(r => formatINR(r.profit)), total: formatINR(totalReturns), fd: formatINR(fdProfit) },
-            { label: 'Future Value after ' + yrs + ' Years', vals: rowsData.map(r => formatINR(r.fv)), total: formatINR(totalFV), fd: formatINR(fdFVPreTax) },
-            { label: 'Tax to be paid on Investment Returns', vals: rowsData.map(r => (r.tax * 100).toFixed(1) + '%'), total: ((totalTaxAmt / totalReturns) * 100).toFixed(2) + '%', fd: (fdTax * 100).toFixed(1) + '%' },
+            { label: 'CAGR (Pre-Tax)', vals: rowsData.map(r => r.ret.toFixed(1) + '%'), total: ((Math.pow(totalFV / principal, 1 / yrs) - 1) * 100).toFixed(2) + '%', fd: fdCAGR.toFixed(1) + '%' },
+            { label: 'Returns Amount (' + yrs + ' yrs)', vals: rowsData.map(r => formatINR(r.profit)), total: formatINR(totalReturns), fd: formatINR(fdProfit) },
+            { label: 'Tax Rate (Approx)', vals: rowsData.map(r => (r.profit > 0 ? (r.taxAmt / r.profit * 100).toFixed(1) : '0') + '%'), total: (totalReturns > 0 ? (totalTaxAmt / totalReturns * 100).toFixed(2) : '0') + '%', fd: (fdTax * 100).toFixed(1) + '%' },
             { label: 'Tax Payment Amount', vals: rowsData.map(r => formatINR(r.taxAmt)), total: formatINR(totalTaxAmt), fd: formatINR(fdTaxAmt) },
-            { label: 'Net Returns from the Investment', vals: rowsData.map(r => formatINR(r.netRet)), total: formatINR(totalNetRet), fd: formatINR(fdNetRet) },
-            { label: 'Future Value after ' + yrs + ' Years - After Tax', vals: rowsData.map(r => formatINR(r.finalFV)), total: formatINR(totalFinalFV), fd: formatINR(fdFinalFV), highlight: true }
+            { label: 'Net Returns (Post-Tax)', vals: rowsData.map(r => formatINR(r.netRet)), total: formatINR(totalNetRet), fd: formatINR(fdNetRet) },
+            { label: 'CAGR (Post-Tax)', vals: rowsData.map(r => (r.amt > 0 ? (Math.pow(r.finalFV / r.amt, 1 / yrs) - 1) * 100 : 0).toFixed(2) + '%'), total: ((Math.pow(totalFinalFV / principal, 1 / yrs) - 1) * 100).toFixed(2) + '%', fd: (fdCAGR * (1 - fdTax)).toFixed(2) + '%' },
+            { label: 'Final Corpus (' + yrs + ' Years)', vals: rowsData.map(r => formatINR(r.finalFV)), total: formatINR(totalFinalFV), fd: formatINR(fdFinalFV), highlight: true }
         ];
 
         const tbody = document.getElementById('aa-res-body');
@@ -530,41 +541,47 @@ export function calculateWealthProjection() {
     const roiPre = getVal('wealth-roi-pre') / 100;
     const roiPost = getVal('wealth-roi-post') / 100;
 
-    // Compounding Frequency Analysis (using Goal 1 Target Year as reference if applicable)
+    // Future Value Growth Table (Lumpsum)
     const refTenure = getVal('goal1-target') || 10;
     const principal = getVal('goal1-cost') || 1000000;
 
-    const compoundingModes = [
-        { name: 'Annual Compound (1)', freq: 1 },
-        { name: 'Compound Half Yrly (2)', freq: 2 },
-        { name: 'Compound Quarterly (3)', freq: 4 },
-        { name: 'Compound Monthly (4)', freq: 12 }
-    ];
+    const fv = principal * Math.pow(1 + roiPre, refTenure);
 
-    let htmlCompounding = '';
-    compoundingModes.forEach(mode => {
-        // Effective Rate = (1 + r/n)^n - 1
-        const effRate = Math.pow(1 + (roiPre / mode.freq), mode.freq) - 1;
-
-        // Use monthly rate derived from effective rate for SIP calculation
-        // Monthly Rate j = (1 + effRate)^(1/12) - 1
-        const monthlyRate = Math.pow(1 + effRate, 1 / 12) - 1;
-        const totalMonths = refTenure * 12;
-
-        // FV SIP = P * [(1+j)^n - 1] / j * (1+j) // Assumes annuity due (start of month)
-        // Adjusting to match screenshot: 900k * [(1.01)^36 - 1] / 0.01 = 38,769,190 (Ordinary Annuity)
-        const fv = principal * (Math.pow(1 + monthlyRate, totalMonths) - 1) / monthlyRate;
-
-        htmlCompounding += `
-            <tr style="border-bottom: 1px solid var(--border);">
-                <td style="padding:10px; font-weight:500;">${mode.name}</td>
-                <td style="text-align:right; padding:10px;">${(effRate * 100).toFixed(2)}%</td>
-                <td style="text-align:right; padding:10px; font-weight:700; color:var(--green-deep);">${formatINR(fv)}</td>
-            </tr>
-        `;
-    });
+    let htmlCompounding = `
+        <tr style="border-bottom: 1px solid var(--border);">
+            <td style="padding:10px; font-weight:500;">Annual Growth (Institutional Base)</td>
+            <td style="text-align:right; padding:10px;">${(roiPre * 100).toFixed(2)}%</td>
+            <td style="text-align:right; padding:10px; font-weight:700; color:var(--green-deep);">${formatINR(fv)}</td>
+        </tr>
+    `;
     const compBody = document.getElementById('wealth-compounding-body');
     if (compBody) compBody.innerHTML = htmlCompounding;
+
+    // Retirement Logic
+    const yrsToRet = Math.max(0, retAge - age);
+    const yrsInRet = Math.max(1, lifeExp - retAge);
+
+    // 1. Future Expense p.a at Retirement
+    const fvExpPa = expPa * Math.pow(1 + inflation, yrsToRet);
+
+    // 2. Corpus Required at Retirement (Inflation adjusted Annuity)
+    const realRate = (1 + roiPost) / (1 + inflation) - 1;
+    let corpusRequiredRet = 0;
+    if (realRate !== 0) {
+        corpusRequiredRet = fvExpPa * (1 - Math.pow(1 + realRate, -yrsInRet)) / realRate;
+    } else {
+        corpusRequiredRet = fvExpPa * yrsInRet;
+    }
+
+    // 3. Monthly SIP to reach Corpus
+    const sipRet = (yrsToRet > 0)
+        ? -Finance.PMT(roiPre / 12, yrsToRet * 12, 0, corpusRequiredRet)
+        : 0;
+
+    const retCorpusEl = document.getElementById('res-ret-corpus');
+    const retSipEl = document.getElementById('res-ret-sip');
+    if (retCorpusEl) retCorpusEl.textContent = formatINR(corpusRequiredRet);
+    if (retSipEl) retSipEl.textContent = formatINR(sipRet);
 
     // Goal Logic
     const goals = [
