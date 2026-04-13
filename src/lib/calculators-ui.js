@@ -156,6 +156,8 @@ function calculateAssetAllocation(skipToday = false) {
             tDebtAmt += amt * (dPct / 100);
             tEquityAmt += amt * (ePct / 100);
             tWRet += (amt / principal) * ret;
+            const wDebt = amt * (dPct / 100) / principal * 100;
+            const wEquity = amt * (ePct / 100) / principal * 100;
 
             if (!skipToday) {
                 htmlToday += `
