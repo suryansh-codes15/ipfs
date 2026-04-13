@@ -106,43 +106,107 @@ function calculateAssetAllocation() {
         const principalEl = document.getElementById('aa-principal');
         const yrsEl = document.getElementById('aa-yrs');
         const totalWRetEl = document.getElementById('aa-w-total');
+        const nameEl = document.getElementById('aa-name');
 
         if (!principalEl || !yrsEl || !totalWRetEl) return;
 
         const principal = parseFloat(principalEl.value) || 0;
         const yrs = parseFloat(yrsEl.value) || 0;
-        const pfReturn = parseFloat(totalWRetEl.dataset.val || 10.65) / 100;
+        const pfName = nameEl ? nameEl.value : 'Client';
 
-        // Standard FD: 7.5% Pre-tax, 30% Tax rate
-        const fdReturnPostTax = 0.075 * (1 - 0.30);
+        // Update Summary Card
+        const resNameEl = document.getElementById('res-aa-name');
+        const resTargetEl = document.getElementById('res-aa-target');
+        const resDebtEl = document.getElementById('res-aa-debt');
+        const resEquityEl = document.getElementById('res-aa-equity');
+        const wdTotalEl = document.getElementById('aa-wd-total');
+        const weTotalEl = document.getElementById('aa-we-total');
 
-        const pfValue = principal * Math.pow(1 + pfReturn, yrs);
-        const fdValue = principal * Math.pow(1 + fdReturnPostTax, yrs);
-        const alpha = pfValue - fdValue;
+        if (resNameEl) resNameEl.textContent = pfName;
+        if (resTargetEl) resTargetEl.textContent = totalWRetEl.textContent;
+        if (resDebtEl && wdTotalEl) resDebtEl.textContent = wdTotalEl.textContent + '%';
+        if (resEquityEl && weTotalEl) resEquityEl.textContent = weTotalEl.textContent + '%';
+
+        // DETAILED TABLE CALCULATION
+        const configs = [
+            { id: 1, name: 'Equity Funds', tax: 0 / 100, liq: 'No Lock In' },
+            { id: 2, name: 'Balance Funds', tax: 0 / 100, liq: 'No Lock In' },
+            { id: 5, name: 'MIPs', tax: 0.80 / 100, liq: 'No Lock In' }, // Map Matrix Row 5 to MIPs
+            { id: 4, name: 'Debt Funds', tax: 0.60 / 100, liq: 'No Lock In' },
+            { id: 3, name: 'ST Debt Fund', tax: 0.50 / 100, liq: 'No Lock In' } // Map Matrix Row 3 to ST Debt
+        ];
+
+        let totalAlloc = 0, totalInvested = 0, totalReturns = 0, totalFV = 0, totalTaxAmt = 0, totalNetRet = 0, totalFinalFV = 0;
+
+        const rowsData = configs.map(cfg => {
+            const alloc = parseFloat(document.getElementById('aa-alloc-' + cfg.id).value) || 0;
+            const ret = parseFloat(document.getElementById('aa-ret-' + cfg.id).value) || 0;
+
+            const amt = principal * (alloc / 100);
+            const fv = amt * Math.pow(1 + (ret / 100), yrs);
+            const profit = fv - amt;
+            const taxAmt = profit * cfg.tax;
+            const netRet = profit - taxAmt;
+            const finalFV = amt + netRet;
+
+            totalAlloc += alloc;
+            totalInvested += amt;
+            totalReturns += profit;
+            totalFV += fv;
+            totalTaxAmt += taxAmt;
+            totalNetRet += netRet;
+            totalFinalFV += finalFV;
+
+            return { ...cfg, alloc, ret, amt, fv, profit, taxAmt, netRet, finalFV };
+        });
+
+        // FD Calculation
+        const fdTax = 30.60 / 100;
+        const fdCAGR = 7.50; // Pre-tax
+        const fdFVPreTax = principal * Math.pow(1 + (fdCAGR / 100), yrs);
+        const fdProfit = fdFVPreTax - principal;
+        const fdTaxAmt = fdProfit * fdTax;
+        const fdNetRet = fdProfit - fdTaxAmt;
+        const fdFinalFV = principal + fdNetRet;
+
+        // Build Table rows
+        const tableRows = [
+            { label: 'Liquidity', vals: rowsData.map(r => r.liq), total: 'Atleast 70%', fd: 'Locked for 3 yrs' },
+            { label: 'Investment Allocation', vals: rowsData.map(r => r.alloc.toFixed(1) + '%'), total: totalAlloc.toFixed(1) + '%', fd: '100.0%' },
+            { label: 'Amount Invested', vals: rowsData.map(r => formatINR(r.amt)), total: formatINR(totalInvested), fd: formatINR(principal) },
+            { label: 'Tenure ( Years )', vals: rowsData.map(r => yrs), total: yrs, fd: yrs },
+            { label: 'CAGR', vals: rowsData.map(r => r.ret.toFixed(1) + '%'), total: ((totalFinalFV / principal - 1) / yrs * 100).toFixed(1) + '%', fd: fdCAGR.toFixed(1) + '%' },
+            { label: 'Returns Amount for ' + yrs + ' years', vals: rowsData.map(r => formatINR(r.profit)), total: formatINR(totalReturns), fd: formatINR(fdProfit) },
+            { label: 'Future Value after ' + yrs + ' Years', vals: rowsData.map(r => formatINR(r.fv)), total: formatINR(totalFV), fd: formatINR(fdFVPreTax) },
+            { label: 'Tax to be paid on Investment Returns', vals: rowsData.map(r => (r.tax * 100).toFixed(1) + '%'), total: ((totalTaxAmt / totalReturns) * 100).toFixed(2) + '%', fd: (fdTax * 100).toFixed(1) + '%' },
+            { label: 'Tax Payment Amount', vals: rowsData.map(r => formatINR(r.taxAmt)), total: formatINR(totalTaxAmt), fd: formatINR(fdTaxAmt) },
+            { label: 'Net Returns from the Investment', vals: rowsData.map(r => formatINR(r.netRet)), total: formatINR(totalNetRet), fd: formatINR(fdNetRet) },
+            { label: 'Future Value after ' + yrs + ' Years - After Tax', vals: rowsData.map(r => formatINR(r.finalFV)), total: formatINR(totalFinalFV), fd: formatINR(fdFinalFV), highlight: true }
+        ];
+
+        const tbody = document.getElementById('aa-res-body');
+        if (tbody) {
+            tbody.innerHTML = '';
+            tableRows.forEach(row => {
+                const tr = document.createElement('tr');
+                if (row.highlight) tr.style.background = 'rgba(201, 168, 76, 0.1)';
+
+                let html = `<td style="padding: 10px; font-weight: 700; border-bottom: 1px solid var(--border);">${row.label}</td>`;
+                row.vals.forEach(val => {
+                    html += `<td style="padding: 10px; text-align: center; border-bottom: 1px solid var(--border);">${val}</td>`;
+                });
+                html += `<td style="padding: 10px; text-align: center; border-bottom: 1px solid var(--border); font-weight: 800; border-left: 1px solid var(--border);">${row.total}</td>`;
+                html += `<td style="padding: 10px; text-align: center; border-bottom: 1px solid var(--border); font-weight: 800; background: rgba(201, 168, 76, 0.05);">${row.fd}</td>`;
+                tr.innerHTML = html;
+                tbody.appendChild(tr);
+            });
+        }
 
         const comparisonContainer = document.getElementById('aa-comparison');
         if (comparisonContainer) {
             comparisonContainer.style.display = 'block';
             comparisonContainer.style.opacity = '1';
         }
-
-        const pfValEl = document.getElementById('res-pf-val');
-        const fdValEl = document.getElementById('res-fd-val');
-        const pfRetEl = document.getElementById('res-pf-ret');
-        const alphaValEl = document.getElementById('res-alpha-val');
-        const totalDebtEl = document.getElementById('res-total-debt');
-        const totalEquityEl = document.getElementById('res-total-equity');
-
-        if (pfValEl) pfValEl.textContent = formatINR(pfValue);
-        if (fdValEl) fdValEl.textContent = formatINR(fdValue);
-        if (pfRetEl) pfRetEl.textContent = (pfReturn * 100).toFixed(2) + '%';
-        if (alphaValEl) alphaValEl.textContent = formatINR(alpha);
-
-        // Populate the Debt/Equity breakdown
-        const wdTotalEl = document.getElementById('aa-wd-total');
-        const weTotalEl = document.getElementById('aa-we-total');
-        if (totalDebtEl && wdTotalEl) totalDebtEl.textContent = wdTotalEl.textContent + '%';
-        if (totalEquityEl && weTotalEl) totalEquityEl.textContent = weTotalEl.textContent + '%';
 
         if (window.gsap && comparisonContainer) {
             gsap.killTweensOf(comparisonContainer);
