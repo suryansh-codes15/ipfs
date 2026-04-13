@@ -180,6 +180,9 @@ function calculateAssetAllocation(skipToday = false) {
             }
         }
 
+        const tWDebt = tAmt > 0 ? (tDebtAmt / tAmt * 100) : 0;
+        const tWEquity = tAmt > 0 ? (tEquityAmt / tAmt * 100) : 0;
+
         if (!skipToday && todayBody) todayBody.innerHTML = htmlToday;
         if (todayFoot) {
             todayFoot.innerHTML = `
@@ -190,8 +193,8 @@ function calculateAssetAllocation(skipToday = false) {
                     <td style="text-align:right; padding: 12px;">—</td>
                     <td style="text-align:right; padding: 12px; border-left: 1px solid rgba(255,255,255,0.2);">—</td>
                     <td style="text-align:right; padding: 12px;">—</td>
-                    <td style="text-align:right; padding: 12px;">${tWDebt.toFixed(2)}</td>
-                    <td style="text-align:right; padding: 12px;">${tWEquity.toFixed(2)}</td>
+                    <td style="text-align:right; padding: 12px;">${tWDebt.toFixed(2)}%</td>
+                    <td style="text-align:right; padding: 12px;">${tWEquity.toFixed(2)}%</td>
                     <td style="text-align:right; padding: 12px;">${formatINR(tAmt)}</td>
                     <td style="text-align:right; padding: 12px;">${formatINR(tRetAmt)}</td>
                 </tr>
