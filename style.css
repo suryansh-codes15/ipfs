@@ -1976,6 +1976,8 @@ footer {
   cursor: pointer;
   z-index: 1001;
   padding: 10px;
+  margin-left: 15px;
+  /* Space from buttons if they exist */
 }
 
 .menu-toggle span {
@@ -1986,9 +1988,27 @@ footer {
   transition: 0.3s;
 }
 
+/* Visibility Utilities */
+.desktop-only {
+  display: flex;
+}
+
+.mobile-only {
+  display: none;
+}
+
 @media (max-width: 1024px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .mobile-only {
+    display: flex;
+  }
+
   nav {
     padding: 0 4%;
+    justify-content: space-between;
   }
 
   .nav-links {
@@ -2001,14 +2021,30 @@ footer {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 40px;
+    gap: 30px;
     transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
     z-index: 999;
     box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
+    padding: 80px 20px;
+    overflow-y: auto;
   }
 
   .nav-links.active {
     right: 0;
+  }
+
+  .nav-actions.mobile-only {
+    flex-direction: column;
+    width: 100%;
+    margin-top: 20px;
+    gap: 15px;
+  }
+
+  .nav-actions.mobile-only .btn-elite {
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+    font-size: 14px;
   }
 
   .menu-toggle {
