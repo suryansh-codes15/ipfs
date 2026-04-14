@@ -117,6 +117,32 @@ function sumAA() {
         if (wdTotalEl) wdTotalEl.textContent = totalWDebt.toFixed(2);
         if (weTotalEl) weTotalEl.textContent = totalWEquity.toFixed(2);
 
+        // Update relocated summary metrics
+        const resTarget = document.getElementById('res-aa-target');
+        const resDebt = document.getElementById('res-aa-debt');
+        const resEquity = document.getElementById('res-aa-equity');
+        const resTotal = document.getElementById('res-aa-total');
+        const resName = document.getElementById('res-aa-name');
+        const inputName = document.getElementById('aa-name');
+
+        if (resTarget) resTarget.textContent = totalWRet.toFixed(2) + '%';
+        if (resTotal) {
+            resTotal.textContent = totalAlloc + '%';
+            resTotal.style.color = totalAlloc !== 100 ? '#ff6b6b' : 'inherit';
+        }
+
+        if (totalAlloc > 0) {
+            const pctDebt = (totalWDebt / totalAlloc) * 100;
+            const pctEquity = (totalWEquity / totalAlloc) * 100;
+            if (resDebt) resDebt.textContent = pctDebt.toFixed(2) + '%';
+            if (resEquity) resEquity.textContent = pctEquity.toFixed(2) + '%';
+        } else {
+            if (resDebt) resDebt.textContent = '0%';
+            if (resEquity) resEquity.textContent = '0%';
+        }
+
+        if (resName && inputName) resName.textContent = inputName.value || 'Client';
+
     } catch (e) {
         console.error('sumAA Error:', e);
     }
