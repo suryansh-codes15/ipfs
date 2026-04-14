@@ -132,10 +132,8 @@ function sumAA() {
         }
 
         if (totalAlloc > 0) {
-            const pctDebt = (totalWDebt / totalAlloc) * 100;
-            const pctEquity = (totalWEquity / totalAlloc) * 100;
-            if (resDebt) resDebt.textContent = pctDebt.toFixed(2) + '%';
-            if (resEquity) resEquity.textContent = pctEquity.toFixed(2) + '%';
+            if (resDebt) resDebt.textContent = totalWDebt.toFixed(2) + '%';
+            if (resEquity) resEquity.textContent = totalWEquity.toFixed(2) + '%';
         } else {
             if (resDebt) resDebt.textContent = '0%';
             if (resEquity) resEquity.textContent = '0%';
