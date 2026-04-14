@@ -251,6 +251,8 @@ function calculateAssetAllocation(skipToday = false) {
         const mfTaxRate = 0.125;
         const mfExemption = 125000;
 
+        let totalAlloc = 0, totalInvested = 0, totalReturns = 0, totalFV = 0, totalTaxAmt = 0, totalNetRet = 0, totalFinalFV = 0;
+
         const rowsData = configs.map(cfg => {
             const alloc = parseFloat(document.getElementById('aa-alloc-' + cfg.id).value) || 0;
             const ret = parseFloat(document.getElementById('aa-ret-' + cfg.id).value) || 0;
