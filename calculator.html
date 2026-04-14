@@ -1148,16 +1148,6 @@
                         <input type="text" id="aa-name" class="calc-field" placeholder="Enter Investor Name"
                             style="padding-left:14px;">
                     </div>
-                    <div class="input-group">
-                        <label class="input-label">FD Interest Rate (%)</label>
-                        <select id="aa-fd-rate" class="calc-field" style="padding-left:10px;">
-                            <option value="5">5%</option>
-                            <option value="6">6%</option>
-                            <option value="7" selected>7%</option>
-                            <option value="7.5">7.5%</option>
-                            <option value="8">8%</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div class="wiz-nav">
@@ -1203,95 +1193,6 @@
                     </div>
                 </div>
 
-                <div class="wiz-nav" style="justify-content: center; margin-bottom: 40px;">
-                    <button type="button" class="btn-wiz-next" onclick="calculateAssetAllocation()"
-                        style="width: 100%; max-width: 400px; padding: 15px; font-size: 16px;">Generate Comparison vs.
-                        FD →</button>
-                </div>
-
-                <div id="aa-comparison" style="display: none; margin-top: 40px; animation: slideUpWiz 0.5s ease;">
-
-                    <!-- SEQUENCE START -->
-
-                    <!-- MODULE 1: TODAY'S ASSET ALLOCATION (10 COLUMNS) -->
-                    <div style="margin-bottom: 50px;">
-                        <h4 class="wiz-title" style="font-size: 20px; color: var(--green-deep);">Today's Asset
-                            Allocation</h4>
-                        <div class="aa-table-wrap" style="overflow-x: auto; margin-top: 15px;">
-                            <table class="aa-table" id="aa-today-table"
-                                style="width: 100%; border-collapse: collapse; min-width: 1100px; font-size: 10px;">
-                                <thead>
-                                    <tr style="background: rgba(160, 201, 105, 0.1); color: var(--green-deep);">
-                                        <th style="padding: 10px; text-align: left; width: 220px;">Equity Schemes</th>
-                                        <th style="text-align: right; padding: 10px;">Expected Return</th>
-                                        <th style="text-align: right; padding: 10px;">Allocation %</th>
-                                        <th style="text-align: right; padding: 10px;">W. Return</th>
-                                        <th
-                                            style="text-align: right; padding: 10px; border-left: 1px solid var(--border);">
-                                            Debt</th>
-                                        <th style="text-align: right; padding: 10px;">Equity</th>
-                                        <th style="text-align: right; padding: 10px;">W. Debt</th>
-                                        <th style="text-align: right; padding: 10px;">W. Equity</th>
-                                        <th
-                                            style="text-align: right; padding: 10px; background: rgba(160, 201, 105, 0.2);">
-                                            <div style="font-size: 9px; margin-bottom: 2px;">Amount Invested</div>
-                                            <input type="number" id="aa-principal" value="10000000"
-                                                style="width: 80px; text-align: right; background: transparent; border: 1px solid var(--green-deep); border-radius: 4px; font-weight: 800; color: var(--green-deep);"
-                                                oninput="calculateAssetAllocation()">
-                                        </th>
-                                        <th
-                                            style="text-align: right; padding: 10px; background: rgba(160, 201, 105, 0.2);">
-                                            Expected Returns</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="aa-today-body"></tbody>
-                                <tfoot id="aa-today-foot"
-                                    style="background: var(--green-deep); color: #fff; font-weight: 800;"></tfoot>
-                            </table>
-                        </div>
-                    </div>
-
-
-
-                    <!-- MODULE 3: BASE CASE SCENARIO -->
-                    <h4 class="wiz-title" style="font-size: 20px; color: var(--green-deep);">Base Case Scenario</h4>
-                    <p class="wiz-desc" style="margin-top: -10px;">Detailed Comparison Summary against 100% Fixed
-                        Deposits.</p>
-                    <div class="aa-table-wrap" style="overflow-x: auto; margin-top: 15px;">
-                        <table class="aa-table" id="aa-res-table"
-                            style="width: 100%; border-collapse: collapse; min-width: 950px; font-size: 11px;">
-                            <thead>
-                                <tr style="background: var(--green-deep); color: #fff;">
-                                    <th style="padding: 12px; text-align: left; width: 220px;">Portfolio Mix</th>
-                                    <th style="padding: 12px; text-align: center;">Equity Funds</th>
-                                    <th style="padding: 12px; text-align: center;">Balance Funds</th>
-                                    <th style="padding: 12px; text-align: center;">MIPs</th>
-                                    <th style="padding: 12px; text-align: center;">Debt Funds</th>
-                                    <th style="padding: 12px; text-align: center;">ST Debt Fund</th>
-                                    <th
-                                        style="padding: 12px; text-align: center; border-left: 1px solid rgba(255,255,255,0.2);">
-                                        Total</th>
-                                    <th
-                                        style="padding: 12px; text-align: center; background: var(--gold); color: var(--green-deep);">
-                                        100% FDs</th>
-                                </tr>
-                            </thead>
-                            <tbody id="aa-res-body">
-                                <!-- Generated via JS -->
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div
-                        style="margin-top: 24px; padding: 20px; background: rgba(160, 201, 105, 0.05); border-radius: 12px; border-left: 4px solid var(--gold);">
-                        <p style="margin:0; font-size: 13px; font-weight: 700; color: var(--green-deep);"><span
-                                style="color: var(--gold); font-size: 16px;">★</span> Expected Inflation: 5%</p>
-                        <p style="margin:10px 0 0 0; font-size: 12px; color: var(--text-3); line-height: 1.6;">
-                            <strong>Benefits:</strong> Liquidity of atleast two-third of the portfolio at any given
-                            point of time. Net of tax returns indexed for inflation.
-                        </p>
-                    </div>
-                </div>
             </div>
         </div>
         </div>
