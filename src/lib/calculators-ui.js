@@ -126,9 +126,9 @@ function calculateAssetAllocation(skipToday = false) {
     try {
         const nameEl = document.getElementById('aa-name');
         const principalEl = document.getElementById('aa-principal');
-        if (!principalEl) return;
 
-        const principal = parseFloat(principalEl.value) || 10000000;
+        // Remove early return, use 1 Crore as base principal for internal % math
+        const principal = principalEl ? (parseFloat(principalEl.value) || 10000000) : 10000000;
         const yrs = 3; // Institutional Standard for comparison
         const pfName = nameEl && nameEl.value ? nameEl.value : 'Client';
 
