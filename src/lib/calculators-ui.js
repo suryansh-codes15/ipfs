@@ -7,7 +7,6 @@ import { Finance } from './finance-logic.js';
 // EXPOSE FUNCTIONS TO GLOBAL SCOPE
 window.initCalculators = initCalculators;
 window.sumAA = sumAA;
-window.calculateAssetAllocation = calculateAssetAllocation;
 window.wizNext = wizNext;
 window.wizBack = wizBack;
 window.wizReset = wizReset;
@@ -139,10 +138,171 @@ function sumAA() {
             if (resEquity) resEquity.textContent = '0%';
         }
 
-        if (resName && inputName) resName.textContent = inputName.value || 'Client';
+        if (resName && inputName) {
+            resName.textContent = inputName.value || 'Client';
+            const instName = document.getElementById('res-aa-name-institutional');
+            if (instName) instName.textContent = inputName.value || 'Client';
+        }
+
+        if (resTarget) {
+            resTarget.textContent = totalWRet.toFixed(2) + '%';
+            const instTarget = document.getElementById('res-aa-target-institutional');
+            if (instTarget) instTarget.textContent = totalWRet.toFixed(2) + '%';
+        }
+
+        if (resTotal) {
+            resTotal.textContent = totalAlloc + '%';
+            const instTotal = document.getElementById('res-aa-total-institutional');
+            if (instTotal) instTotal.textContent = totalAlloc;
+        }
+
+        if (totalAlloc > 0) {
+            if (resDebt) {
+                resDebt.textContent = totalWDebt.toFixed(2) + '%';
+                const instDebt = document.getElementById('res-aa-debt-institutional');
+                if (instDebt) instDebt.textContent = totalWDebt.toFixed(2);
+            }
+            if (resEquity) {
+                resEquity.textContent = totalWEquity.toFixed(2) + '%';
+                const instEquity = document.getElementById('res-aa-equity-institutional');
+                if (instEquity) instEquity.textContent = totalWEquity.toFixed(2);
+            }
+        } else {
+            if (resDebt) resDebt.textContent = '0%';
+            if (resEquity) resEquity.textContent = '0%';
+        }
+
+        // UPDATE WEALTH ANALYTICS SUMMARY TABLE (FULL REPLICA)
+        const totalAmount = parseFloat(document.getElementById('aa-amount')?.value) || 0;
+        let waTotalAmt = 0;
+        let waTotalGain = 0;
+
+        for (let j = 1; j <= 5; j++) {
+            const rowIdx = j; // Matrix uses 1-5 directly for categories
+            const label = document.getElementById(`aa-label-${rowIdx}`)?.innerText || '';
+            const ret = parseFloat(document.getElementById(`aa-ret-${rowIdx}`)?.value) || 0;
+            const alloc = parseFloat(document.getElementById(`aa-alloc-${rowIdx}`)?.value) || 0;
+            const wRet = parseFloat(document.getElementById(`aa-w-${rowIdx}`)?.dataset.val || 0); // Need to ensures dataset.val exists
+            const wDebt = document.getElementById(`aa-wd-${rowIdx}`)?.innerText || '0';
+            const wEquity = document.getElementById(`aa-we-${rowIdx}`)?.innerText || '0';
+
+            const amt = totalAmount * (alloc / 100);
+            const annGain = amt * (ret / 100);
+
+            // Populate Wealth Analytics Table
+            const waLabel = document.getElementById(`wa-label-${rowIdx}`);
+            if (waLabel) waLabel.innerText = label;
+            if (document.getElementById(`wa-ret-${rowIdx}`)) document.getElementById(`wa-ret-${rowIdx}`).innerText = ret.toFixed(1) + '%';
+            if (document.getElementById(`wa-alloc-${rowIdx}`)) document.getElementById(`wa-alloc-${rowIdx}`).innerText = alloc.toFixed(1) + '%';
+            if (document.getElementById(`wa-w-ret-${rowIdx}`)) document.getElementById(`wa-w-ret-${rowIdx}`).innerText = (ret * (alloc / 100)).toFixed(2) + '%';
+            if (document.getElementById(`wa-w-debt-${rowIdx}`)) document.getElementById(`wa-w-debt-${rowIdx}`).innerText = wDebt;
+            if (document.getElementById(`wa-w-equity-${rowIdx}`)) document.getElementById(`wa-w-equity-${rowIdx}`).innerText = wEquity;
+            if (document.getElementById(`wa-amt-${rowIdx}`)) document.getElementById(`wa-amt-${rowIdx}`).innerText = formatINR(amt);
+            if (document.getElementById(`wa-gain-${rowIdx}`)) document.getElementById(`wa-gain-${rowIdx}`).innerText = formatINR(annGain);
+
+            waTotalAmt += amt;
+            waTotalGain += annGain;
+        }
+
+        if (document.getElementById('wa-alloc-total')) document.getElementById('wa-alloc-total').innerText = totalAlloc + '%';
+        if (document.getElementById('wa-w-ret-total')) document.getElementById('wa-w-ret-total').innerText = totalWRet.toFixed(2) + '%';
+        if (document.getElementById('wa-w-debt-total')) document.getElementById('wa-w-debt-total').innerText = totalWDebt.toFixed(2);
+        if (document.getElementById('wa-w-equity-total')) document.getElementById('wa-w-equity-total').innerText = totalWEquity.toFixed(2);
+        if (document.getElementById('wa-amt-total')) document.getElementById('wa-amt-total').innerText = formatINR(waTotalAmt);
+        if (document.getElementById('wa-gain-total')) document.getElementById('wa-gain-total').innerText = formatINR(waTotalGain);
+
+        updateStrategicProposal();
 
     } catch (e) {
         console.error('sumAA Error:', e);
+    }
+}
+
+function updateStrategicProposal() {
+    try {
+        const totalAmt = parseFloat(document.getElementById('aa-amount')?.value) || 0;
+        const tenure = parseFloat(document.getElementById('aa-tenure')?.value) || 3;
+        const inflation = parseFloat(document.getElementById('aa-inflation')?.value) || 5;
+        const fdCAGR = 0.075;
+        const fdTaxRate = 0.306;
+
+        // FD Calculation
+        const fdFV = totalAmt * Math.pow(1 + fdCAGR, tenure);
+        const fdGain = fdFV - totalAmt;
+        const fdTax = fdGain * fdTaxRate;
+        const fdNetFV = fdFV - fdTax;
+
+        document.getElementById('p-amt-fd').textContent = formatINR(totalAmt);
+        document.getElementById('p-gain-fd').textContent = formatINR(fdGain);
+        document.getElementById('p-fv-fd').textContent = formatINR(fdFV);
+        document.getElementById('p-tax-amt-fd').textContent = formatINR(fdTax);
+        document.getElementById('p-net-fv-fd').textContent = formatINR(fdNetFV);
+
+        let totalAlloc = 0;
+        let totalGain = 0;
+        let totalFV = 0;
+        let totalTax = 0;
+        let totalNetFV = 0;
+
+        // Corrected Mapping (Matrix Row -> Proposal Column)
+        // Col 1: Equity (Row 1), Col 2: Balance (Row 2), Col 3: MIP (Row 5), Col 4: Debt (Row 4), Col 5: ST Debt (Row 3)
+        const mapping = [1, 2, 5, 4, 3];
+        const taxRates = [0, 0, 0.008, 0.006, 0.005]; // Constant rates for Col 1-5
+
+        for (let j = 1; j <= 5; j++) {
+            const rowIdx = mapping[j - 1];
+            const label = document.getElementById(`aa-label-${rowIdx}`)?.innerText || `Scheme ${j}`;
+            const alloc = parseFloat(document.getElementById(`aa-alloc-${rowIdx}`)?.value) || 0;
+            const ret = parseFloat(document.getElementById(`aa-ret-${rowIdx}`)?.value) || 0;
+
+            const amt = totalAmt * (alloc / 100);
+            const fv = amt * Math.pow(1 + (ret / 100), tenure);
+            const gain = fv - amt;
+            const tax = gain * (taxRates[j - 1] * tenure);
+            const netFV = fv - tax;
+
+            // Update Label sync
+            const colLabel = document.getElementById(`p-label-${j}`);
+            if (colLabel) colLabel.textContent = label.trim();
+
+            document.getElementById(`p-alloc-${j}`).textContent = alloc.toFixed(1) + '%';
+            document.getElementById(`p-amt-${j}`).textContent = formatINR(amt);
+            document.getElementById(`p-ret-${j}`).textContent = ret.toFixed(1) + '%';
+            document.getElementById(`p-gain-${j}`).textContent = formatINR(gain);
+            document.getElementById(`p-fv-${j}`).textContent = formatINR(fv);
+            document.getElementById(`p-tax-amt-${j}`).textContent = formatINR(tax);
+            document.getElementById(`p-net-fv-${j}`).textContent = formatINR(netFV);
+
+            totalAlloc += alloc;
+            totalGain += gain;
+            totalFV += fv;
+            totalTax += tax;
+            totalNetFV += netFV;
+        }
+
+        document.getElementById('p-alloc-total').textContent = totalAlloc.toFixed(1) + '%';
+        document.getElementById('p-amt-total').textContent = formatINR(totalAmt);
+        document.getElementById('p-gain-total').textContent = formatINR(totalGain);
+        document.getElementById('p-fv-total').textContent = formatINR(totalFV);
+        document.getElementById('p-tax-amt-total').textContent = formatINR(totalTax);
+        document.getElementById('p-net-fv-total').textContent = formatINR(totalNetFV);
+
+        // Weighted Average Return for Total Row
+        const wRetTotal = totalAlloc > 0 ? (totalFV / totalAmt) : 1;
+        const cagrTotal = (Math.pow(wRetTotal, 1 / tenure) - 1) * 100;
+        document.getElementById('p-ret-total').textContent = cagrTotal.toFixed(2) + '%';
+
+        const effectiveTaxTotal = totalGain > 0 ? (totalTax / totalGain) * 100 : 0;
+        document.getElementById('p-tax-rate-total').textContent = effectiveTaxTotal.toFixed(2) + '%';
+
+        // Update Inflation Row
+        const infStr = inflation.toFixed(1) + '%';
+        if (document.getElementById('p-inflation-mix')) document.getElementById('p-inflation-mix').textContent = infStr;
+        if (document.getElementById('p-inflation-total')) document.getElementById('p-inflation-total').textContent = infStr;
+        if (document.getElementById('p-inflation-fd')) document.getElementById('p-inflation-fd').textContent = infStr;
+
+    } catch (e) {
+        console.error('Proposal Update Error:', e);
     }
 }
 
