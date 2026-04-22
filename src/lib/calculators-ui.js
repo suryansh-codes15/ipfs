@@ -389,17 +389,16 @@ function wizCalcStep3() {
     const annuity = parseFloat(document.getElementById('wiz-future-exp-val').dataset.raw || 0);
     const lifePost = parseFloat(document.getElementById('wiz-post-years').value) || 0;
     const roiPost = parseFloat(document.getElementById('wiz-roi-post').value) / 100 || 0;
-    const inflation = parseFloat(document.getElementById('wiz-inflation').value) / 100 || 0;
 
-    // Use Real Rate of Return (r = (1+i)/(1+infl) - 1) to account for increasing expenses during retirement
-    const realRateAnnual = ((1 + roiPost) / (1 + inflation)) - 1;
-    const monthlyRate = realRateAnnual / 12;
+    // Match RMF Excel Sheet3: -PV(postRetROI/12, lifeYears*12, monthlyExpense, 0, 0)
+    // Uses nominal post-retirement rate, type=0 (end-of-period), standard annuity
+    const monthlyRate = roiPost / 12;
     const months = lifePost * 12;
 
     let corpus = 0;
     if (monthlyRate !== 0) {
-        // PV of Annuity Due (Payments at start of month): PV = PMT * [(1 - (1+r)^-n) / r] * (1+r)
-        corpus = annuity * ((1 - Math.pow(1 + monthlyRate, -months)) / monthlyRate) * (1 + monthlyRate);
+        // -PV(rate, nper, pmt, 0, 0) = PMT * (1 - (1+r)^-n) / r
+        corpus = annuity * ((1 - Math.pow(1 + monthlyRate, -months)) / monthlyRate);
     } else {
         corpus = annuity * months;
     }
@@ -576,10 +575,14 @@ export function calculateWealthProjection() {
         const yrsLeft = getVal(goal.prefix + '-target');
 
         if (yrsLeft > 0) {
-            // Future Cost = Present Cost * (1 + inflation)^yrsLeft
+            // Corpus = FV(inflation, yrsLeft, 0, -presentCost) — annual compounding
+            // Matching Excel CFPS: FV(B16, E11, 0, -E12, 0)
             const corpusRequired = presentCost * Math.pow(1 + inflation, yrsLeft);
-            // SIP = PMT(r/12, n*12, 0, -FV)
-            const sip = -Finance.PMT(roiPre / 12, yrsLeft * 12, 0, corpusRequired);
+
+            // Monthly SIP = Annual PMT / 12 — matching Excel CFPS: E15/12
+            // Excel uses: PMT(annualROI, years, 0, corpus) then divides by 12
+            const sipPa = Finance.PMT(roiPre, yrsLeft, 0, corpusRequired);
+            const sip = -sipPa / 12;
 
             document.getElementById(goal.resPrefix + '-card').querySelector('.card-head').textContent = `${name || 'Goal ' + goal.id}: Results`;
             document.getElementById(goal.resPrefix + '-corpus').textContent = formatINR(corpusRequired);
