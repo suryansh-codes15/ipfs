@@ -1389,7 +1389,7 @@
                                         <td style="text-align: center; font-weight: 700;">Atleast 70%</td>
                                         <td
                                             style="text-align: center; background: #fffde7; border-left: 2px solid var(--gold);">
-                                            Locked for 3 years</td>
+                                            <span id="p-liquidity-fd">Locked for 3 years</span></td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid var(--border);">
                                         <td style="padding: 12px; font-weight: 700;">Investment Allocation (%)</td>
@@ -1418,15 +1418,15 @@
                                     <tr
                                         style="border-bottom: 1px solid var(--border); background: rgba(160, 201, 105, 0.05);">
                                         <td style="padding: 12px; font-weight: 700;">Tenure (Years)</td>
-                                        <td style="text-align: center;">3</td>
-                                        <td style="text-align: center;">3</td>
-                                        <td style="text-align: center;">3</td>
-                                        <td style="text-align: center;">3</td>
-                                        <td style="text-align: center;">3</td>
-                                        <td style="text-align: center; font-weight: 700;">3</td>
+                                        <td id="p-tenure-1" style="text-align: center;">3</td>
+                                        <td id="p-tenure-2" style="text-align: center;">3</td>
+                                        <td id="p-tenure-3" style="text-align: center;">3</td>
+                                        <td id="p-tenure-4" style="text-align: center;">3</td>
+                                        <td id="p-tenure-5" style="text-align: center;">3</td>
+                                        <td id="p-tenure-total" style="text-align: center; font-weight: 700;">3</td>
                                         <td
                                             style="text-align: center; background: #fffde7; border-left: 2px solid var(--gold);">
-                                            3</td>
+                                            <span id="p-tenure-fd">3</span></td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid var(--border);">
                                         <td style="padding: 12px; font-weight: 700;">CAGR (%)</td>
@@ -1441,7 +1441,7 @@
                                             7.50%</td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid var(--border);">
-                                        <td style="padding: 12px; font-weight: 700;">Returns Amount (3Y)</td>
+                                        <td id="p-gain-label" style="padding: 12px; font-weight: 700;">Returns Amount (3Y)</td>
                                         <td id="p-gain-1" style="text-align: center;">₹0</td>
                                         <td id="p-gain-2" style="text-align: center;">₹0</td>
                                         <td id="p-gain-3" style="text-align: center;">₹0</td>
@@ -1453,7 +1453,7 @@
                                             ₹0</td>
                                     </tr>
                                     <tr style="border-bottom: 1px solid var(--border); background: var(--bg2);">
-                                        <td style="padding: 12px; font-weight: 700;">Future Value (3Y)</td>
+                                        <td id="p-fv-label" style="padding: 12px; font-weight: 700;">Future Value (3Y)</td>
                                         <td id="p-fv-1" style="text-align: center;">₹0</td>
                                         <td id="p-fv-2" style="text-align: center;">₹0</td>
                                         <td id="p-fv-3" style="text-align: center;">₹0</td>
@@ -1614,7 +1614,7 @@
                                 <input type="number" id="goal1-age" class="calc-field" value="25">
                             </div>
                             <div class="input-group">
-                                <label class="input-label">Target Year</label>
+                                <label class="input-label">Target Year or Years Left</label>
                                 <input type="number" id="goal1-target" class="calc-field" value="27">
                             </div>
                         </div>
@@ -1640,7 +1640,7 @@
                                 <input type="number" id="goal2-age" class="calc-field" value="23">
                             </div>
                             <div class="input-group">
-                                <label class="input-label">Target Year</label>
+                                <label class="input-label">Target Year or Years Left</label>
                                 <input type="number" id="goal2-target" class="calc-field" value="27">
                             </div>
                         </div>

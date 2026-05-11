@@ -237,6 +237,16 @@ function updateStrategicProposal() {
         document.getElementById('p-fv-fd').textContent = formatINR(fdFV);
         document.getElementById('p-tax-amt-fd').textContent = formatINR(fdTax);
         document.getElementById('p-net-fv-fd').textContent = formatINR(fdNetFV);
+        if (document.getElementById('p-liquidity-fd')) document.getElementById('p-liquidity-fd').textContent = `Locked for ${tenure} years`;
+        if (document.getElementById('p-gain-label')) document.getElementById('p-gain-label').textContent = `Returns Amount (${tenure}Y)`;
+        if (document.getElementById('p-fv-label')) document.getElementById('p-fv-label').textContent = `Future Value (${tenure}Y)`;
+
+        for (let j = 1; j <= 5; j++) {
+            const tenureEl = document.getElementById(`p-tenure-${j}`);
+            if (tenureEl) tenureEl.textContent = tenure;
+        }
+        if (document.getElementById('p-tenure-total')) document.getElementById('p-tenure-total').textContent = tenure;
+        if (document.getElementById('p-tenure-fd')) document.getElementById('p-tenure-fd').textContent = tenure;
 
         let totalAlloc = 0;
         let totalGain = 0;
@@ -270,6 +280,7 @@ function updateStrategicProposal() {
             document.getElementById(`p-ret-${j}`).textContent = ret.toFixed(1) + '%';
             document.getElementById(`p-gain-${j}`).textContent = formatINR(gain);
             document.getElementById(`p-fv-${j}`).textContent = formatINR(fv);
+            document.getElementById(`p-tax-rate-${j}`).textContent = (taxRates[j - 1] * tenure * 100).toFixed(2) + '%';
             document.getElementById(`p-tax-amt-${j}`).textContent = formatINR(tax);
             document.getElementById(`p-net-fv-${j}`).textContent = formatINR(netFV);
 
@@ -288,7 +299,7 @@ function updateStrategicProposal() {
         document.getElementById('p-net-fv-total').textContent = formatINR(totalNetFV);
 
         // Weighted Average Return for Total Row
-        const wRetTotal = totalAlloc > 0 ? (totalFV / totalAmt) : 1;
+        const wRetTotal = totalAlloc > 0 && totalAmt > 0 ? (totalFV / totalAmt) : 1;
         const cagrTotal = (Math.pow(wRetTotal, 1 / tenure) - 1) * 100;
         document.getElementById('p-ret-total').textContent = cagrTotal.toFixed(2) + '%';
 
@@ -461,7 +472,7 @@ function triggerCalculation(type) {
         try {
             if (type === 'ret') calculateRetirement();
             if (type === 'allocation') calculateAllocation();
-            if (type === 'wealth') calculateGoal();
+            if (type === 'wealth') calculateWealthProjection();
             if (type === 'budget') calculateBudget();
         } catch (err) {
             console.error('Calculation Error:', err);
@@ -485,19 +496,18 @@ export function calculateAllocation() {
     const getVal = (id) => parseFloat(document.getElementById(id)?.value || 0);
     const amount = getVal('aa-amount');
     const tenure = getVal('aa-tenure');
-    const eqW = getVal('aa-equity-w') / 100;
-    const debtW = getVal('aa-debt-w') / 100;
-    const eqReturn = 0.15, debtReturn = 0.08, fdReturn = 0.07, taxRate = 0.30;
-    const portfolioReturn = (eqW * eqReturn) + (debtW * debtReturn);
+    const fdReturn = 0.07;
 
-    // MF Calculation (Annual Compounding)
-    const mfValuePreTax = amount * Math.pow(1 + portfolioReturn, tenure);
+    let weightedReturn = 0;
+    for (let i = 1; i <= 5; i++) {
+        weightedReturn += (getVal(`aa-alloc-${i}`) / 100) * (getVal(`aa-ret-${i}`) / 100);
+    }
+
+    const mfValuePreTax = amount * Math.pow(1 + weightedReturn, tenure);
     const mfProfit = mfValuePreTax - amount;
-    // MF Tax: 12.5% on gains > 1.25L
     const mfTax = Math.max(0, (mfProfit - 125000) * 0.125);
     const mfValue = mfValuePreTax - mfTax;
 
-    // FD Calculation (Annual Compounding, 30% Tax)
     const fdValuePreTax = amount * Math.pow(1 + fdReturn, tenure);
     const fdProfit = fdValuePreTax - amount;
     const fdTax = fdProfit * 0.30;
@@ -510,6 +520,19 @@ export function calculateAllocation() {
 export function calculateWealthProjection() {
     const getVal = (id) => parseFloat(document.getElementById(id)?.value || 0);
     const getText = (id) => document.getElementById(id)?.value || '';
+    const currentYear = new Date().getFullYear();
+
+    function resolveYearsToGoal(targetInput, ageAtGoal, currentAge) {
+        if (targetInput >= currentYear && targetInput <= currentYear + 100) {
+            return Math.max(0, targetInput - currentYear);
+        }
+
+        if (ageAtGoal > currentAge && ageAtGoal <= 120) {
+            return Math.max(0, ageAtGoal - currentAge);
+        }
+
+        return Math.max(0, targetInput);
+    }
 
     // General Info
     const age = getVal('wealth-age');
@@ -521,7 +544,11 @@ export function calculateWealthProjection() {
     const roiPost = getVal('wealth-roi-post') / 100;
 
     // Future Value Growth Table (Lumpsum)
-    const refTenure = getVal('goal1-target') || 10;
+    const refTenure = resolveYearsToGoal(
+        getVal('goal1-target'),
+        getVal('goal1-age'),
+        age
+    ) || 10;
     const principal = getVal('goal1-cost') || 1000000;
 
     const fv = principal * Math.pow(1 + roiPre, refTenure);
@@ -539,17 +566,20 @@ export function calculateWealthProjection() {
     // Retirement Logic
     const yrsToRet = Math.max(0, retAge - age);
     const yrsInRet = Math.max(1, lifeExp - retAge);
+    const monthlyExp = expPa / 12;
+    const monthlyInflation = inflation / 12;
+    const monthsToRet = yrsToRet * 12;
+    const monthlyRatePost = roiPost / 12;
+    const monthsInRet = yrsInRet * 12;
 
-    // 1. Future Expense p.a at Retirement
-    const fvExpPa = expPa * Math.pow(1 + inflation, yrsToRet);
+    // Match the retirement wizard methodology for consistency within the app.
+    const fvMonthlyExp = monthlyExp * Math.pow(1 + monthlyInflation, monthsToRet);
 
-    // 2. Corpus Required at Retirement (Inflation adjusted Annuity Due - Payments at START of month)
-    const realRate = (1 + roiPost) / (1 + inflation) - 1;
     let corpusRequiredRet = 0;
-    if (realRate !== 0) {
-        corpusRequiredRet = fvExpPa * ((1 - Math.pow(1 + realRate, -yrsInRet)) / realRate) * (1 + realRate);
+    if (monthlyRatePost !== 0) {
+        corpusRequiredRet = fvMonthlyExp * ((1 - Math.pow(1 + monthlyRatePost, -monthsInRet)) / monthlyRatePost);
     } else {
-        corpusRequiredRet = fvExpPa * yrsInRet;
+        corpusRequiredRet = fvMonthlyExp * monthsInRet;
     }
 
     // 3. Monthly SIP to reach Corpus
@@ -572,7 +602,8 @@ export function calculateWealthProjection() {
         const name = getText(goal.prefix + '-name');
         const tgtAge = getVal(goal.prefix + '-age');
         const presentCost = getVal(goal.prefix + '-cost');
-        const yrsLeft = getVal(goal.prefix + '-target');
+        const targetInput = getVal(goal.prefix + '-target');
+        const yrsLeft = resolveYearsToGoal(targetInput, tgtAge, age);
 
         if (yrsLeft > 0) {
             // Corpus = FV(inflation, yrsLeft, 0, -presentCost) — annual compounding
@@ -581,8 +612,7 @@ export function calculateWealthProjection() {
 
             // Monthly SIP = Annual PMT / 12 — matching Excel CFPS: E15/12
             // Excel uses: PMT(annualROI, years, 0, corpus) then divides by 12
-            const sipPa = Finance.PMT(roiPre, yrsLeft, 0, corpusRequired);
-            const sip = -sipPa / 12;
+            const sip = -Finance.PMT(roiPre / 12, yrsLeft * 12, 0, corpusRequired);
 
             document.getElementById(goal.resPrefix + '-card').querySelector('.card-head').textContent = `${name || 'Goal ' + goal.id}: Results`;
             document.getElementById(goal.resPrefix + '-corpus').textContent = formatINR(corpusRequired);
@@ -601,15 +631,7 @@ export function calculateWealthProjection() {
 }
 
 export function calculateGoal() {
-    // Legacy goal calculator now redirects to new projection or kept for single goal tab
-    const getVal = (id) => parseFloat(document.getElementById(id)?.value || 0);
-    const target = getVal('goal-target');
-    const yrs = getVal('goal-yrs');
-    const roi = getVal('goal-roi') / 100;
-    if (yrs <= 0) return;
-    const sipNeeded = -Finance.PMT(roi / 12, yrs * 12, 0, target);
-    const lumpsumNeeded = -Finance.PV(roi, yrs, 0, target);
-    updateResults('goal', { 'res-goal-sip': sipNeeded, 'res-goal-lump': lumpsumNeeded });
+    calculateWealthProjection();
 }
 
 export function calculateBudget() {
