@@ -798,15 +798,15 @@
             <div class="chart-area" id="stp-ca"><canvas id="stp-chart"></canvas></div>
             <div class="table-area" id="stp-ta">
               <table class="res-table">
-                <thead><tr><th>Year</th><th>Source Fund (₹)</th><th>Target Fund (₹)</th><th>Combined (₹)</th></tr></thead>
+                <thead><tr><th>By end of the year</th><th>Balance amount in source fund</th><th>Amount transferred to destination fund</th><th>Resultant Amount</th></tr></thead>
                 <tbody id="stp-tb"></tbody>
               </table>
             </div>
             <div class="results-row four-cols">
               <div class="rc"><div class="rc-lbl">Invested Amount</div><div class="rc-val" id="stp-r-inv">₹0</div></div>
-              <div class="rc"><div class="rc-lbl">Total Transfer</div><div class="rc-val" id="stp-r-trf">₹0</div></div>
-              <div class="rc"><div class="rc-lbl">Source Fund Balance</div><div class="rc-val" id="stp-r-src">₹0</div></div>
-              <div class="rc"><div class="rc-lbl">Target Fund Value</div><div class="rc-val gold" id="stp-r-tgt">₹0</div></div>
+              <div class="rc"><div class="rc-lbl">Balance amount in source fund</div><div class="rc-val" id="stp-r-src">₹0</div></div>
+              <div class="rc"><div class="rc-lbl">Amount transferred to destination fund</div><div class="rc-val" id="stp-r-tgt">₹0</div></div>
+              <div class="rc"><div class="rc-lbl">Resultant Amount</div><div class="rc-val gold" id="stp-r-res">₹0</div></div>
             </div>
             <button class="explore-btn" onclick="window.location.href='services.html'">Explore More</button>
           </div>
@@ -967,12 +967,17 @@ function stpSim(lumpsum, monthly, srcPct, tgtPct, years) {
     for (let yr = 1; yr <= years; yr++) {
         let yTrf = 0;
         for (let m = 0; m < 12; m++) {
-            // Start-of-month transfer (Annuity Due style)
-            const t = Math.min(monthly, src);
-            src -= t;
-            tgt += t;
+            // Source grows first (EndOfM style)
             src *= (1 + si);
-            tgt *= (1 + ti);
+            
+            let t = 0;
+            if (src >= monthly) {
+                t = monthly;
+                src -= t;
+            }
+            
+            // Target transfers first, then grows (StartOfM style)
+            tgt = (tgt + t) * (1 + ti);
             yTrf += t;
         }
         cumTrf += yTrf;
@@ -980,12 +985,12 @@ function stpSim(lumpsum, monthly, srcPct, tgtPct, years) {
     }
     return rows;
 }
-// STP: required source lumpsum = PV of monthly transfer stream (annuity due)
+// STP: required source lumpsum = PV of monthly transfer stream (ordinary annuity)
 function stpRequired(monthly, srcPct, years) {
     const i = effRate(srcPct, 12);
     const n = years * 12;
     if (i <= 0) return monthly * n;
-    return monthly * (1 - Math.pow(1+i, -n)) / i * (1+i);
+    return monthly * (1 - Math.pow(1+i, -n)) / i;
 }
 
 /* ══════════════════════════════════════════════
@@ -1298,7 +1303,7 @@ function computeStp(){
         if (si <= 0) {
             lumpsum = transfer * n;
         } else {
-            lumpsum = transfer * (1 - Math.pow(1+si, -n)) / si * (1+si);
+            lumpsum = transfer * (1 - Math.pow(1+si, -n)) / si;
         }
         
         // Save computed values back to state so stpSim uses them
@@ -1316,15 +1321,18 @@ function computeStp(){
         labels.push(r.yr===0?CY:(CY+r.yr));
         srcArr.push(Math.round(r.src));
         tgtArr.push(Math.round(r.tgt));
-        if(r.yr>0) tbody+=`<tr><td>Year ${r.yr}</td><td>${Math.round(r.src).toLocaleString('en-IN')}</td><td>${Math.round(r.tgt).toLocaleString('en-IN')}</td><td>${(Math.round(r.src)+Math.round(r.tgt)).toLocaleString('en-IN')}</td></tr>`;
+        if(r.yr>0) {
+            const yrLabel = CY + r.yr - 1;
+            tbody+=`<tr><td>${yrLabel}</td><td>${fmt(r.src)}</td><td>${fmt(r.tgt)}</td><td>${fmt(r.src + r.tgt)}</td></tr>`;
+        }
     });
     document.getElementById('stp-tb').innerHTML=tbody;
     mkChart('stp-chart',labels,srcArr,'Source Fund',tgtArr,'Target Fund');
     const last=rows[rows.length-1];
     document.getElementById('stp-r-inv').textContent=fmt(lumpsum);
-    document.getElementById('stp-r-trf').textContent=fmt(last.cumTrf);
     document.getElementById('stp-r-src').textContent=fmt(last.src);
     document.getElementById('stp-r-tgt').textContent=fmt(last.tgt);
+    document.getElementById('stp-r-res').textContent=fmt(last.src + last.tgt);
 }
 
 /* ══════════════════════════════════════════════
