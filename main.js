@@ -56,7 +56,6 @@ async function loadBlogs() {
         actionsHtml = `
           <div class="card-actions">
             ${blog.pdf_url ? `<a href="${blog.pdf_url}" target="_blank" class="${btnMainClass}">Download</a>` : ''}
-            ${blog.read_url ? `<a href="${blog.read_url}" class="${btnSecClass}">Read</a>` : ''}
           </div>
         `;
       }

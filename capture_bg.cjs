@@ -1,4 +1,5 @@
-const puppeteer = require('puppeteer');
+The Architecture of
+Financial Freedomconst puppeteer = require('puppeteer');
 
 (async () => {
     const browser = await puppeteer.launch();
